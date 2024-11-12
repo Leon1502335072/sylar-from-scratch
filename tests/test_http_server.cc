@@ -12,26 +12,35 @@ static sylar::Logger::ptr g_logger = SYLAR_LOG_ROOT();
 
 sylar::IOManager::ptr worker;
 
-void run() {
+void run() 
+{
     g_logger->setLevel(sylar::LogLevel::INFO);
     //sylar::http::HttpServer::ptr server(new sylar::http::HttpServer(true, worker.get(), sylar::IOManager::GetThis()));
+    // true给keep-alive赋值为真，即产生的连接都是长连接
     sylar::http::HttpServer::ptr server(new sylar::http::HttpServer(true));
     sylar::Address::ptr addr = sylar::Address::LookupAnyIPAddress("0.0.0.0:8020");
-    while (!server->bind(addr)) {
+    while (!server->bind(addr)) 
+    {
         sleep(2);
     }
     auto sd = server->getServletDispatch();
-    sd->addServlet("/sylar/xx", [](sylar::http::HttpRequest::ptr req, sylar::http::HttpResponse::ptr rsp, sylar::http::HttpSession::ptr session) {
+    sd->addServlet("/sylar/xx", [](sylar::http::HttpRequest::ptr req
+                                  ,sylar::http::HttpResponse::ptr rsp
+                                  ,sylar::http::HttpSession::ptr session) {
         rsp->setBody(req->toString());
         return 0;
     });
 
-    sd->addGlobServlet("/sylar/*", [](sylar::http::HttpRequest::ptr req, sylar::http::HttpResponse::ptr rsp, sylar::http::HttpSession::ptr session) {
+    sd->addGlobServlet("/sylar/*", [](sylar::http::HttpRequest::ptr req, 
+                                      sylar::http::HttpResponse::ptr rsp, 
+                                      sylar::http::HttpSession::ptr session) {
         rsp->setBody("Glob:\r\n" + req->toString());
         return 0;
     });
 
-    sd->addGlobServlet("/sylarx/*", [](sylar::http::HttpRequest::ptr req, sylar::http::HttpResponse::ptr rsp, sylar::http::HttpSession::ptr session) {
+    sd->addGlobServlet("/sylarx/*", [](sylar::http::HttpRequest::ptr req, 
+                                       sylar::http::HttpResponse::ptr rsp, 
+                                       sylar::http::HttpSession::ptr session) {
         rsp->setBody(XX(<html>
                                 <head><title> 404 Not Found</ title></ head>
                                 <body>
@@ -59,7 +68,8 @@ void run() {
     server->start();
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv) 
+{
     sylar::EnvMgr::GetInstance()->init(argc, argv);
     sylar::Config::LoadFromConfDir(sylar::EnvMgr::GetInstance()->getConfigPath());
     

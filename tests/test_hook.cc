@@ -17,7 +17,8 @@ static sylar::Logger::ptr g_logger = SYLAR_LOG_ROOT();
 /**
  * @brief 测试sleep被hook之后的浆果
  */
-void test_sleep() {
+void test_sleep() 
+{
     SYLAR_LOG_INFO(g_logger) << "test_sleep begin";
     sylar::IOManager iom;
     
@@ -41,7 +42,8 @@ void test_sleep() {
 /**
  * 测试socket api hook
  */
-void test_sock() {
+void test_sock() 
+{
     int sock = socket(AF_INET, SOCK_STREAM, 0);
 
     sockaddr_in addr;
@@ -54,7 +56,8 @@ void test_sock() {
     int rt = connect(sock, (const sockaddr*)&addr, sizeof(addr));
     SYLAR_LOG_INFO(g_logger) << "connect rt=" << rt << " errno=" << errno;
 
-    if(rt) {
+    if(rt) 
+    {
         return;
     }
 
@@ -62,7 +65,8 @@ void test_sock() {
     rt = send(sock, data, sizeof(data), 0);
     SYLAR_LOG_INFO(g_logger) << "send rt=" << rt << " errno=" << errno;
 
-    if(rt <= 0) {
+    if(rt <= 0) 
+    {
         return;
     }
 
@@ -72,7 +76,8 @@ void test_sock() {
     rt = recv(sock, &buff[0], buff.size(), 0);
     SYLAR_LOG_INFO(g_logger) << "recv rt=" << rt << " errno=" << errno;
 
-    if(rt <= 0) {
+    if(rt <= 0) 
+    {
         return;
     }
 
@@ -80,11 +85,12 @@ void test_sock() {
     SYLAR_LOG_INFO(g_logger) << buff;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
     sylar::EnvMgr::GetInstance()->init(argc, argv);
     sylar::Config::LoadFromConfDir(sylar::EnvMgr::GetInstance()->getConfigPath());
-
-    // test_sleep();
+    SYLAR_LOG_INFO(g_logger) << "main begin";
+    //test_sleep();
 
     // 只有以协程调度的方式运行hook才能生效
     sylar::IOManager iom;

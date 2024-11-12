@@ -34,12 +34,12 @@ public:
     ~Thread();
 
     /**
-     * @brief 线程ID
+     * @brief 线程ID 该函数返回的是系统所分配的全局唯一id 之所以不是pthread_t是因为 不同的进程可能分配相同的线程id
      */
     pid_t getId() const { return m_id; }
 
     /**
-     * @brief 线程名称
+     * @brief 获取当前线程的名称（给日志用的）
      */
     const std::string &getName() const { return m_name; }
 
@@ -71,9 +71,9 @@ private:
     static void *run(void *arg);
 
 private:
-    /// 线程id
+    /// 线程id:系统分配的所有线程间的唯一id，通过syscall(SYS_gettid)获取
     pid_t m_id = -1;
-    /// 线程结构
+    /// 线程结构 （这个是线程创建出来时的线程号或者id）
     pthread_t m_thread = 0;
     /// 线程执行函数
     std::function<void()> m_cb;

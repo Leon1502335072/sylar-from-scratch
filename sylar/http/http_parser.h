@@ -27,7 +27,7 @@ public:
 
     /**
      * @brief 解析协议
-     * @param[in, out] data 协议文本内存
+     * @param[in, out] data 协议文本内存指针
      * @param[in] len 协议文本内存长度
      * @return 返回实际解析的长度,并且将已解析的数据移除
      */
@@ -57,7 +57,7 @@ public:
     void setError(int v) { m_error = v; }
 
     /**
-     * @brief 返回HttpRequest结构体
+     * @brief 返回请求报文的数据，返回 HttpRequest::ptr
      */
     HttpRequest::ptr getData() const { return m_data; }
 
@@ -88,7 +88,7 @@ public:
     static uint64_t GetHttpRequestMaxBodySize();
 
 private:
-    /// http_parser
+    /// http_parser结构体
     http_parser m_parser;
     /// HttpRequest
     HttpRequest::ptr m_data;

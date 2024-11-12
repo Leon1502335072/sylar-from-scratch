@@ -37,12 +37,12 @@ public:
     ~Semaphore();
 
     /**
-     * @brief 获取信号量
+     * @brief 信号量-1
      */
     void wait();
 
     /**
-     * @brief 释放信号量
+     * @brief 信号量+1
      */
     void notify();
 private:
@@ -56,27 +56,31 @@ template<class T>
 struct ScopedLockImpl {
 public:
     /**
-     * @brief 构造函数
+     * @brief 构造函数 在构造函数里直接加锁
      * @param[in] mutex Mutex
      */
-    ScopedLockImpl(T& mutex)
-        :m_mutex(mutex) {
-        m_mutex.lock();
+    ScopedLockImpl(T& mutex):m_mutex(mutex) 
+    {
+        //m_mutex.lock();
+        lock();
         m_locked = true;
     }
 
     /**
      * @brief 析构函数,自动释放锁
      */
-    ~ScopedLockImpl() {
+    ~ScopedLockImpl() 
+    {
         unlock();
     }
 
     /**
      * @brief 加锁
      */
-    void lock() {
-        if(!m_locked) {
+    void lock() 
+    {
+        if(!m_locked) 
+        {
             m_mutex.lock();
             m_locked = true;
         }
@@ -85,14 +89,16 @@ public:
     /**
      * @brief 解锁
      */
-    void unlock() {
-        if(m_locked) {
+    void unlock() 
+    {
+        if(m_locked) 
+        {
             m_mutex.unlock();
             m_locked = false;
         }
     }
 private:
-    /// mutex
+    /// T类型的互斥量mutex
     T& m_mutex;
     /// 是否已上锁
     bool m_locked;
@@ -108,24 +114,27 @@ public:
      * @brief 构造函数
      * @param[in] mutex 读写锁
      */
-    ReadScopedLockImpl(T& mutex)
-        :m_mutex(mutex) {
-        m_mutex.rdlock();
+    ReadScopedLockImpl(T& mutex):m_mutex(mutex)     
+    {
+        lock();
         m_locked = true;
     }
 
     /**
      * @brief 析构函数,自动释放锁
      */
-    ~ReadScopedLockImpl() {
+    ~ReadScopedLockImpl() 
+    {
         unlock();
     }
 
     /**
      * @brief 上读锁
      */
-    void lock() {
-        if(!m_locked) {
+    void lock() 
+    {
+        if(!m_locked) 
+        {
             m_mutex.rdlock();
             m_locked = true;
         }
@@ -134,8 +143,10 @@ public:
     /**
      * @brief 释放锁
      */
-    void unlock() {
-        if(m_locked) {
+    void unlock() 
+    {
+        if(m_locked) 
+        {
             m_mutex.unlock();
             m_locked = false;
         }
@@ -157,24 +168,28 @@ public:
      * @brief 构造函数
      * @param[in] mutex 读写锁
      */
-    WriteScopedLockImpl(T& mutex)
-        :m_mutex(mutex) {
-        m_mutex.wrlock();
+    WriteScopedLockImpl(T& mutex):m_mutex(mutex) 
+    {
+        //m_mutex.wrlock();
+        lock();
         m_locked = true;
     }
 
     /**
      * @brief 析构函数
      */
-    ~WriteScopedLockImpl() {
+    ~WriteScopedLockImpl() 
+    {
         unlock();
     }
 
     /**
      * @brief 上写锁
      */
-    void lock() {
-        if(!m_locked) {
+    void lock() 
+    {
+        if(!m_locked) 
+        {
             m_mutex.wrlock();
             m_locked = true;
         }
@@ -183,8 +198,10 @@ public:
     /**
      * @brief 解锁
      */
-    void unlock() {
-        if(m_locked) {
+    void unlock() 
+    {
+        if(m_locked) 
+        {
             m_mutex.unlock();
             m_locked = false;
         }
@@ -197,42 +214,46 @@ private:
 };
 
 /**
- * @brief 互斥量
+ * @brief 互斥量（也叫锁 但是这个锁只有两种状态 要么锁住 要么没锁 当多个线程可读时如果加这个互斥量会影响并发度）
  */
 class Mutex : Noncopyable {
-public: 
-    /// 局部锁
+public:
+    /// 局部锁 mutex::Lock lock;
     typedef ScopedLockImpl<Mutex> Lock;
 
     /**
-     * @brief 构造函数
+     * @brief 构造函数（初始化互斥量/锁）
      */
-    Mutex() {
+    Mutex() 
+    {
         pthread_mutex_init(&m_mutex, nullptr);
     }
 
     /**
-     * @brief 析构函数
+     * @brief 析构函数（销毁互斥量资源或者说是锁资源）
      */
-    ~Mutex() {
+    ~Mutex() 
+    {
         pthread_mutex_destroy(&m_mutex);
     }
 
     /**
      * @brief 加锁
      */
-    void lock() {
+    void lock() 
+    {
         pthread_mutex_lock(&m_mutex);
     }
 
     /**
      * @brief 解锁
      */
-    void unlock() {
+    void unlock() 
+    {
         pthread_mutex_unlock(&m_mutex);
     }
 private:
-    /// mutex
+    /// 互斥量（锁）
     pthread_mutex_t m_mutex;
 };
 
@@ -266,7 +287,7 @@ public:
 };
 
 /**
- * @brief 读写互斥量
+ * @brief 读写互斥量 （进一步提高并发度 即多个线程读是允许的）
  */
 class RWMutex : Noncopyable{
 public:
@@ -280,35 +301,40 @@ public:
     /**
      * @brief 构造函数
      */
-    RWMutex() {
+    RWMutex() 
+    {
         pthread_rwlock_init(&m_lock, nullptr);
     }
     
     /**
      * @brief 析构函数
      */
-    ~RWMutex() {
+    ~RWMutex() 
+    {
         pthread_rwlock_destroy(&m_lock);
     }
 
     /**
      * @brief 上读锁
      */
-    void rdlock() {
+    void rdlock() 
+    {
         pthread_rwlock_rdlock(&m_lock);
     }
 
     /**
      * @brief 上写锁
      */
-    void wrlock() {
+    void wrlock() 
+    {
         pthread_rwlock_wrlock(&m_lock);
     }
 
     /**
      * @brief 解锁
      */
-    void unlock() {
+    void unlock() 
+    {
         pthread_rwlock_unlock(&m_lock);
     }
 private:
@@ -361,28 +387,32 @@ public:
     /**
      * @brief 构造函数
      */
-    Spinlock() {
+    Spinlock() 
+    {
         pthread_spin_init(&m_mutex, 0);
     }
 
     /**
      * @brief 析构函数
      */
-    ~Spinlock() {
+    ~Spinlock() 
+    {
         pthread_spin_destroy(&m_mutex);
     }
 
     /**
      * @brief 上锁
      */
-    void lock() {
+    void lock() 
+    {
         pthread_spin_lock(&m_mutex);
     }
 
     /**
      * @brief 解锁
      */
-    void unlock() {
+    void unlock() 
+    {
         pthread_spin_unlock(&m_mutex);
     }
 private:
@@ -401,7 +431,8 @@ public:
     /**
      * @brief 构造函数
      */
-    CASLock() {
+    CASLock() 
+    {
         m_mutex.clear();
     }
 
@@ -414,14 +445,16 @@ public:
     /**
      * @brief 上锁
      */
-    void lock() {
+    void lock() 
+    {
         while(std::atomic_flag_test_and_set_explicit(&m_mutex, std::memory_order_acquire));
     }
 
     /**
      * @brief 解锁
      */
-    void unlock() {
+    void unlock() 
+    {
         std::atomic_flag_clear_explicit(&m_mutex, std::memory_order_release);
     }
 private:

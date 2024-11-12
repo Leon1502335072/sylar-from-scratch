@@ -10,15 +10,18 @@
 
 sylar::Logger::ptr g_logger = SYLAR_LOG_ROOT();
 
-void run_in_fiber2() {
+void run_in_fiber2() 
+{
     SYLAR_LOG_INFO(g_logger) << "run_in_fiber2 begin";
     SYLAR_LOG_INFO(g_logger) << "run_in_fiber2 end";
 }
 
-void run_in_fiber() {
+void run_in_fiber() 
+{
     SYLAR_LOG_INFO(g_logger) << "run_in_fiber begin";
 
     SYLAR_LOG_INFO(g_logger) << "before run_in_fiber yield";
+    //GetThis()会增加一个智能指针的引用+1
     sylar::Fiber::GetThis()->yield();
     SYLAR_LOG_INFO(g_logger) << "after run_in_fiber yield";
 
@@ -26,12 +29,15 @@ void run_in_fiber() {
     // fiber结束之后会自动返回主协程运行
 }
 
-void test_fiber() {
+void test_fiber() 
+{
     SYLAR_LOG_INFO(g_logger) << "test_fiber begin";
 
     // 初始化线程主协程
     sylar::Fiber::GetThis();
+    SYLAR_LOG_INFO(g_logger) << sylar::Fiber::GetThis()->getId();
 
+    //新建一个子协程（工作协程）
     sylar::Fiber::ptr fiber(new sylar::Fiber(run_in_fiber, 0, false));
     SYLAR_LOG_INFO(g_logger) << "use_count:" << fiber.use_count(); // 1
 
@@ -62,7 +68,8 @@ void test_fiber() {
     SYLAR_LOG_INFO(g_logger) << "test_fiber end";
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
     sylar::EnvMgr::GetInstance()->init(argc, argv);
     sylar::Config::LoadFromConfDir(sylar::EnvMgr::GetInstance()->getConfigPath());
 
@@ -70,12 +77,15 @@ int main(int argc, char *argv[]) {
     SYLAR_LOG_INFO(g_logger) << "main begin";
 
     std::vector<sylar::Thread::ptr> thrs;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 1; i++) 
+    {
         thrs.push_back(sylar::Thread::ptr(
             new sylar::Thread(&test_fiber, "thread_" + std::to_string(i))));
+            //这里 &test_fiber==test_fiber 所以传test_fiber也是可以的
     }
 
-    for (auto i : thrs) {
+    for (auto i : thrs) 
+    {
         i->join();
     }
 

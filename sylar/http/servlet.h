@@ -35,7 +35,7 @@ public:
      * @param[in] name 名称
      */
     Servlet(const std::string& name)
-        :m_name(name) {}
+            :m_name(name) {}
 
     /**
      * @brief 析构函数
@@ -50,13 +50,14 @@ public:
      * @return 是否处理成功
      */
     virtual int32_t handle(sylar::http::HttpRequest::ptr request
-                   , sylar::http::HttpResponse::ptr response
-                   , sylar::http::HttpSession::ptr session) = 0;
+                          ,sylar::http::HttpResponse::ptr response
+                          ,sylar::http::HttpSession::ptr session ) = 0;
                    
     /**
      * @brief 返回Servlet名称
      */
     const std::string& getName() const { return m_name;}
+
 protected:
     /// 名称
     std::string m_name;
@@ -71,8 +72,8 @@ public:
     typedef std::shared_ptr<FunctionServlet> ptr;
     /// 函数回调类型定义
     typedef std::function<int32_t (sylar::http::HttpRequest::ptr request
-                   , sylar::http::HttpResponse::ptr response
-                   , sylar::http::HttpSession::ptr session)> callback;
+                                  ,sylar::http::HttpResponse::ptr response
+                                  ,sylar::http::HttpSession::ptr session) > callback;
 
 
     /**
@@ -80,9 +81,10 @@ public:
      * @param[in] cb 回调函数
      */
     FunctionServlet(callback cb);
+
     virtual int32_t handle(sylar::http::HttpRequest::ptr request
-                   , sylar::http::HttpResponse::ptr response
-                   , sylar::http::HttpSession::ptr session) override;
+                          ,sylar::http::HttpResponse::ptr response
+                          ,sylar::http::HttpSession::ptr session ) override;
 private:
     /// 回调函数
     callback m_cb;
@@ -100,14 +102,16 @@ class HoldServletCreator : public IServletCreator {
 public:
     typedef std::shared_ptr<HoldServletCreator> ptr;
     HoldServletCreator(Servlet::ptr slt)
-        :m_servlet(slt) {
+                      :m_servlet(slt) {
     }
 
-    Servlet::ptr get() const override {
+    Servlet::ptr get() const override 
+    {
         return m_servlet;
     }
 
-    std::string getName() const override {
+    std::string getName() const override 
+    {
         return m_servlet->getName();
     }
 private:
@@ -115,18 +119,20 @@ private:
 };
 
 template<class T>
-class ServletCreator : public IServletCreator {
+class ServletCreator : public IServletCreator 
+{
 public:
     typedef std::shared_ptr<ServletCreator> ptr;
 
-    ServletCreator() {
-    }
+    ServletCreator() {}
 
-    Servlet::ptr get() const override {
+    Servlet::ptr get() const override 
+    {
         return Servlet::ptr(new T);
     }
 
-    std::string getName() const override {
+    std::string getName() const override 
+    {
         return TypeToName<T>();
     }
 };
@@ -146,8 +152,8 @@ public:
      */
     ServletDispatch();
     virtual int32_t handle(sylar::http::HttpRequest::ptr request
-                   , sylar::http::HttpResponse::ptr response
-                   , sylar::http::HttpSession::ptr session) override;
+                          ,sylar::http::HttpResponse::ptr response
+                          ,sylar::http::HttpSession::ptr session) override;
 
     /**
      * @brief 添加servlet
@@ -181,12 +187,14 @@ public:
     void addGlobServletCreator(const std::string& uri, IServletCreator::ptr creator);
 
     template<class T>
-    void addServletCreator(const std::string& uri) {
+    void addServletCreator(const std::string& uri) 
+    {
         addServletCreator(uri, std::make_shared<ServletCreator<T> >());
     }
 
     template<class T>
-    void addGlobServletCreator(const std::string& uri) {
+    void addGlobServletCreator(const std::string& uri) 
+    {
         addGlobServletCreator(uri, std::make_shared<ServletCreator<T> >());
     }
 
@@ -237,6 +245,7 @@ public:
 
     void listAllServletCreator(std::map<std::string, IServletCreator::ptr>& infos);
     void listAllGlobServletCreator(std::map<std::string, IServletCreator::ptr>& infos);
+
 private:
     /// 读写互斥量
     RWMutexType m_mutex;
@@ -262,8 +271,8 @@ public:
      */
     NotFoundServlet(const std::string& name);
     virtual int32_t handle(sylar::http::HttpRequest::ptr request
-                   , sylar::http::HttpResponse::ptr response
-                   , sylar::http::HttpSession::ptr session) override;
+                          ,sylar::http::HttpResponse::ptr response
+                          ,sylar::http::HttpSession::ptr session) override;
 
 private:
     std::string m_name;

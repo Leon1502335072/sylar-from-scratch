@@ -10,18 +10,24 @@ sylar::Logger::ptr g_logger = SYLAR_LOG_ROOT();
 
 sylar::Env *g_env = sylar::EnvMgr::GetInstance();
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
+    // 这个是加在vector里的
     g_env->addHelp("h", "print this help message");
 
     bool is_print_help = false;
-    if(!g_env->init(argc, argv)) {
+    if(!g_env->init(argc, argv)) 
+    {
         is_print_help = true;
     }
-    if(g_env->has("h")) {
+    // 这是在map里找的
+    if(g_env->has("h")) 
+    {
         is_print_help = true;
     }
 
-    if(is_print_help) {
+    if(is_print_help) 
+    {
         g_env->printHelp();
         return false;
     }

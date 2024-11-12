@@ -22,7 +22,8 @@ namespace http {
 /**
  * @brief HTTP方法枚举
  */
-enum class HttpMethod {
+enum class HttpMethod 
+{
 #define XX(num, name, string) name = num,
     HTTP_METHOD_MAP(XX)
 #undef XX
@@ -32,14 +33,15 @@ enum class HttpMethod {
 /**
  * @brief HTTP状态枚举
  */
-enum class HttpStatus {
+enum class HttpStatus 
+{
 #define XX(code, name, desc) name = code,
     HTTP_STATUS_MAP(XX)
 #undef XX
 };
 
 /**
- * @brief 将字符串方法名转成HTTP方法枚举
+ * @brief 将字符串方法名转成HTTP方法枚举 (string转数字)
  * @param[in] m HTTP方法
  * @return HTTP方法枚举
  */
@@ -53,7 +55,7 @@ HttpMethod StringToHttpMethod(const std::string& m);
 HttpMethod CharsToHttpMethod(const char* m);
 
 /**
- * @brief 将HTTP方法枚举转换成字符串
+ * @brief 将HTTP方法枚举转换成字符串 （数字转string）
  * @param[in] m HTTP方法枚举
  * @return 字符串
  */
@@ -69,7 +71,8 @@ const char* HttpStatusToString(const HttpStatus& s);
 /**
  * @brief 忽略大小写比较仿函数
  */
-struct CaseInsensitiveLess {
+struct CaseInsensitiveLess 
+{
     /**
      * @brief 忽略大小写比较字符串
      */
@@ -87,16 +90,22 @@ struct CaseInsensitiveLess {
  *      @retval false 不存在或者转换失败 val = def
  */
 template<class MapType, class T>
-bool checkGetAs(const MapType& m, const std::string& key, T& val, const T& def = T()) {
+bool checkGetAs(const MapType& m, const std::string& key, T& val, const T& def = T()) 
+{
     auto it = m.find(key);
-    if(it == m.end()) {
+    if(it == m.end()) 
+    {
         val = def;
         return false;
     }
-    try {
+
+    try 
+    {
         val = boost::lexical_cast<T>(it->second);
         return true;
-    } catch (...) {
+    } 
+    catch (...) 
+    {
         val = def;
     }
     return false;
@@ -110,14 +119,20 @@ bool checkGetAs(const MapType& m, const std::string& key, T& val, const T& def =
  * @return 如果存在且转换成功返回对应的值,否则返回默认值
  */
 template<class MapType, class T>
-T getAs(const MapType& m, const std::string& key, const T& def = T()) {
+T getAs(const MapType& m, const std::string& key, const T& def = T()) 
+{
     auto it = m.find(key);
-    if(it == m.end()) {
+    if(it == m.end()) 
+    {
         return def;
     }
-    try {
+    try 
+    {
         return boost::lexical_cast<T>(it->second);
-    } catch (...) {
+    } 
+    catch (...) 
+    {
+        // 什么也没做
     }
     return def;
 }
@@ -135,7 +150,7 @@ public:
     typedef std::map<std::string, std::string, CaseInsensitiveLess> MapType;
 
     /**
-     * @brief 构造函数
+     * @brief 构造函数，参数列表给了很多默认值，且不是通过形参给的
      * @param[in] version 版本
      * @param[in] close 是否keepalive
      */
@@ -364,7 +379,8 @@ public:
      * @return 如果存在且转换成功返回true,否则失败val=def
      */
     template<class T>
-    bool checkGetHeaderAs(const std::string& key, T& val, const T& def = T()) {
+    bool checkGetHeaderAs(const std::string& key, T& val, const T& def = T()) 
+    {
         return checkGetAs(m_headers, key, val, def);
     }
 
@@ -376,7 +392,8 @@ public:
      * @return 如果存在且转换成功返回对应的值,否则返回def
      */
     template<class T>
-    T getHeaderAs(const std::string& key, const T& def = T()) {
+    T getHeaderAs(const std::string& key, const T& def = T()) 
+    {
         return getAs(m_headers, key, def);
     }
 
@@ -389,7 +406,8 @@ public:
      * @return 如果存在且转换成功返回true,否则失败val=def
      */
     template<class T>
-    bool checkGetParamAs(const std::string& key, T& val, const T& def = T()) {
+    bool checkGetParamAs(const std::string& key, T& val, const T& def = T()) 
+    {
         initQueryParam();
         initBodyParam();
         return checkGetAs(m_params, key, val, def);
@@ -403,7 +421,8 @@ public:
      * @return 如果存在且转换成功返回对应的值,否则返回def
      */
     template<class T>
-    T getParamAs(const std::string& key, const T& def = T()) {
+    T getParamAs(const std::string& key, const T& def = T()) 
+    {
         initQueryParam();
         initBodyParam();
         return getAs(m_params, key, def);
@@ -418,7 +437,8 @@ public:
      * @return 如果存在且转换成功返回true,否则失败val=def
      */
     template<class T>
-    bool checkGetCookieAs(const std::string& key, T& val, const T& def = T()) {
+    bool checkGetCookieAs(const std::string& key, T& val, const T& def = T()) 
+    {
         initCookies();
         return checkGetAs(m_cookies, key, val, def);
     }
@@ -431,7 +451,8 @@ public:
      * @return 如果存在且转换成功返回对应的值,否则返回def
      */
     template<class T>
-    T getCookieAs(const std::string& key, const T& def = T()) {
+    T getCookieAs(const std::string& key, const T& def = T()) 
+    {
         initCookies();
         return getAs(m_cookies, key, def);
     }
@@ -630,7 +651,8 @@ public:
      * @return 如果存在且转换成功返回true,否则失败val=def
      */
     template<class T>
-    bool checkGetHeaderAs(const std::string& key, T& val, const T& def = T()) {
+    bool checkGetHeaderAs(const std::string& key, T& val, const T& def = T()) 
+    {
         return checkGetAs(m_headers, key, val, def);
     }
 
@@ -642,7 +664,8 @@ public:
      * @return 如果存在且转换成功返回对应的值,否则返回def
      */
     template<class T>
-    T getHeaderAs(const std::string& key, const T& def = T()) {
+    T getHeaderAs(const std::string& key, const T& def = T()) 
+    {
         return getAs(m_headers, key, def);
     }
 
@@ -687,7 +710,7 @@ private:
     bool m_websocket;
     /// 响应消息体
     std::string m_body;
-    /// 响应原因
+    /// 响应原因 响应状态码后面的字符串
     std::string m_reason;
     /// 响应头部MAP
     MapType m_headers;

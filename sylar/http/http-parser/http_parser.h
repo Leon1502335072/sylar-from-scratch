@@ -205,11 +205,11 @@ enum http_status
   XX(33, SOURCE,      SOURCE)       \
 
 enum http_method
-  {
+{
 #define XX(num, name, string) HTTP_##name = num,
   HTTP_METHOD_MAP(XX)
 #undef XX
-  };
+};
 
 
 enum http_parser_type { HTTP_REQUEST, HTTP_RESPONSE, HTTP_BOTH };
@@ -290,7 +290,8 @@ enum http_errno {
 #define HTTP_PARSER_ERRNO(p)            ((enum http_errno) (p)->http_errno)
 
 
-struct http_parser {
+struct http_parser 
+{
   /** PRIVATE **/
   unsigned int type : 2;         /* enum http_parser_type */
   unsigned int flags : 8;        /* F_* values from 'flags' enum; semi-public */
@@ -321,7 +322,8 @@ struct http_parser {
 };
 
 
-struct http_parser_settings {
+struct http_parser_settings 
+{
   http_cb      on_message_begin;
   http_data_cb on_url;
   http_data_cb on_status;
@@ -357,13 +359,15 @@ enum http_parser_url_fields
  * because we probably have padding left over), we convert any port to
  * a uint16_t.
  */
-struct http_parser_url {
+struct http_parser_url 
+{
   uint16_t field_set;           /* Bitmask of (1 << UF_*) values */
   uint16_t port;                /* Converted UF_PORT string */
 
-  struct {
-    uint16_t off;               /* Offset into buffer in which field starts */
-    uint16_t len;               /* Length of run in buffer */
+  struct 
+  {
+     uint16_t off;               /* Offset into buffer in which field starts */
+     uint16_t len;               /* Length of run in buffer */
   } field_data[UF_MAX];
 };
 

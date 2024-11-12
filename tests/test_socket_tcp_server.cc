@@ -8,10 +8,12 @@
 
 static sylar::Logger::ptr g_logger = SYLAR_LOG_ROOT();
 
-void test_tcp_server() {
+void test_tcp_server() 
+{
     int ret;
 
-    auto addr = sylar::Address::LookupAnyIPAddress("0.0.0.0:12345");
+    auto addr = sylar::Address::LookupAnyIPAddress("0.0.0.0:12345", AF_INET);
+    // 条件为真时不发生断言
     SYLAR_ASSERT(addr);
 
     auto socket = sylar::Socket::CreateTCPSocket();
@@ -25,11 +27,15 @@ void test_tcp_server() {
     ret = socket->listen();
     SYLAR_ASSERT(ret);
 
+    SYLAR_LOG_INFO(g_logger) << "listen_fd infomsg: " << socket->toString();
+
     SYLAR_LOG_INFO(g_logger) << socket->toString() ;
     SYLAR_LOG_INFO(g_logger) << "listening...";
 
-    while(1) {
+    while(1) 
+    {
         auto client = socket->accept();
+        SYLAR_LOG_INFO(g_logger) << "listen_fd infomsg: " << socket->toString();
         SYLAR_ASSERT(client);
         SYLAR_LOG_INFO(g_logger) << "new client: " << client->toString();
         client->send("hello world", strlen("hello world"));
@@ -37,7 +43,8 @@ void test_tcp_server() {
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
     sylar::EnvMgr::GetInstance()->init(argc, argv);
     sylar::Config::LoadFromConfDir(sylar::EnvMgr::GetInstance()->getConfigPath());
 

@@ -11,12 +11,14 @@ static sylar::Logger::ptr g_logger = SYLAR_LOG_ROOT();
 /**
  * @brief 自定义TcpServer类，重载handleClient方法
  */
-class MyTcpServer : public sylar::TcpServer {
+class MyTcpServer : public sylar::TcpServer 
+{
 protected:
     virtual void handleClient(sylar::Socket::ptr client) override;
 };
 
-void MyTcpServer::handleClient(sylar::Socket::ptr client) {
+void MyTcpServer::handleClient(sylar::Socket::ptr client) 
+{
     SYLAR_LOG_INFO(g_logger) << "new client: " << client->toString();
     static std::string buf;
     buf.resize(4096);
@@ -25,7 +27,9 @@ void MyTcpServer::handleClient(sylar::Socket::ptr client) {
     client->close();
 }
 
-void run() {
+void run() 
+{
+    SYLAR_LOG_INFO(g_logger) << "run begin!";
     sylar::TcpServer::ptr server(new MyTcpServer); // 内部依赖shared_from_this()，所以必须以智能指针形式创建对象
     auto addr = sylar::Address::LookupAny("0.0.0.0:12345");
     SYLAR_ASSERT(addr);
@@ -33,21 +37,26 @@ void run() {
     addrs.push_back(addr);
 
     std::vector<sylar::Address::ptr> fails;
-    while(!server->bind(addrs, fails)) {
+    while(!server->bind(addrs, fails)) 
+    {
         sleep(2);
     }
     
     SYLAR_LOG_INFO(g_logger) << "bind success, " << server->toString();
 
     server->start();
+
+    SYLAR_LOG_INFO(g_logger) << " fiber id = " << sylar::Fiber::GetFiberId() << " run end";
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
     sylar::EnvMgr::GetInstance()->init(argc, argv);
     sylar::Config::LoadFromConfDir(sylar::EnvMgr::GetInstance()->getConfigPath());
 
+    SYLAR_LOG_INFO(g_logger) << "main thread " << sylar::Thread::GetName() << " is running";
     sylar::IOManager iom(2);
     iom.schedule(&run);
-
+    SYLAR_LOG_INFO(g_logger) << "main thread " << sylar::Thread::GetName() << " is running~~~";
     return 0;
 }

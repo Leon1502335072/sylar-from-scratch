@@ -16,13 +16,15 @@ namespace sylar {
 namespace {
 
 template<class T, class X, int N>
-T& GetInstanceX() {
+T& GetInstanceX() 
+{
     static T v;
     return v;
 }
 
 template<class T, class X, int N>
-std::shared_ptr<T> GetInstancePtr() {
+std::shared_ptr<T> GetInstancePtr() 
+{
     static std::shared_ptr<T> v(new T);
     return v;
 }
@@ -42,7 +44,8 @@ public:
     /**
      * @brief 返回单例裸指针
      */
-    static T* GetInstance() {
+    static T* GetInstance() 
+    {
         static T v;
         return &v;
         //return &GetInstanceX<T, X, N>();
@@ -61,7 +64,8 @@ public:
     /**
      * @brief 返回单例智能指针
      */
-    static std::shared_ptr<T> GetInstance() {
+    static std::shared_ptr<T> GetInstance() 
+    {
         static std::shared_ptr<T> v(new T);
         return v;
         //return GetInstancePtr<T, X, N>();

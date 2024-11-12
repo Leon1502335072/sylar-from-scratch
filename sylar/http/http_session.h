@@ -17,8 +17,9 @@ namespace sylar {
 namespace http {
 
 /**
- * @brief HTTPSession封装
- */
+ * @brief HTTPSession封装 继承自Socketstream
+ *        server端调accept产生的socket（智能指针）-> 就会产生一个session会话，主要功能就是接收请求和响应请求
+*/
 class HttpSession : public SocketStream {
 public:
     /// 智能指针类型定义

@@ -22,7 +22,9 @@ namespace sylar {
  */
 template <class T>
 typename std::enable_if<sizeof(T) == sizeof(uint64_t), T>::type
-byteswap(T value) {
+byteswap(T value) 
+{
+    // 返回一个值，其中64位的参数中的所有字节都已交换
     return (T)bswap_64((uint64_t)value);
 }
 
@@ -31,7 +33,8 @@ byteswap(T value) {
  */
 template <class T>
 typename std::enable_if<sizeof(T) == sizeof(uint32_t), T>::type
-byteswap(T value) {
+byteswap(T value) 
+{
     return (T)bswap_32((uint32_t)value);
 }
 
@@ -40,7 +43,8 @@ byteswap(T value) {
  */
 template <class T>
 typename std::enable_if<sizeof(T) == sizeof(uint16_t), T>::type
-byteswap(T value) {
+byteswap(T value) 
+{
     return (T)bswap_16((uint16_t)value);
 }
 
@@ -51,12 +55,13 @@ byteswap(T value) {
 #endif
 
 #if SYLAR_BYTE_ORDER == SYLAR_BIG_ENDIAN
-
+// 计算机一般是小端，网络传输一般是大端，本段代码可以识别计算机的字节序（一般是小端的）
 /**
  * @brief 只在小端机器上执行byteswap, 在大端机器上什么都不做
  */
 template <class T>
-T byteswapOnLittleEndian(T t) {
+T byteswapOnLittleEndian(T t) 
+{
     return t;
 }
 
@@ -64,7 +69,8 @@ T byteswapOnLittleEndian(T t) {
  * @brief 只在大端机器上执行byteswap, 在小端机器上什么都不做
  */
 template <class T>
-T byteswapOnBigEndian(T t) {
+T byteswapOnBigEndian(T t) 
+{
     return byteswap(t);
 }
 #else
@@ -73,7 +79,8 @@ T byteswapOnBigEndian(T t) {
  * @brief 只在小端机器上执行byteswap, 在大端机器上什么都不做
  */
 template <class T>
-T byteswapOnLittleEndian(T t) {
+T byteswapOnLittleEndian(T t) 
+{
     return byteswap(t);
 }
 
@@ -81,7 +88,8 @@ T byteswapOnLittleEndian(T t) {
  * @brief 只在大端机器上执行byteswap, 在小端机器上什么都不做
  */
 template <class T>
-T byteswapOnBigEndian(T t) {
+T byteswapOnBigEndian(T t) 
+{
     return t;
 }
 #endif

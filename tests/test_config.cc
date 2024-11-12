@@ -9,6 +9,7 @@
 
 sylar::Logger::ptr g_logger = SYLAR_LOG_ROOT();
 
+// 创建变量
 sylar::ConfigVar<int>::ptr g_int = 
     sylar::Config::Lookup("global.int", (int)8080, "global int");
 
@@ -42,11 +43,12 @@ sylar::ConfigVar<std::unordered_map<std::string, int>>::ptr g_unordered_map_stri
 class Person {
 public:
     Person() {};
-    std::string m_name;
-    int m_age = 0;
-    bool m_sex = 0;
+    std::string m_name = "Leon";
+    int m_age = 18;
+    bool m_sex = 1;
     
-    std::string toString() const {
+    std::string toString() const 
+    {
         std::stringstream ss;
         ss << "[Person name=" << m_name
            << " age=" << m_age
@@ -55,7 +57,8 @@ public:
         return ss.str();
     }
 
-    bool operator==(const Person &oth) const {
+    bool operator==(const Person &oth) const 
+    {
         return m_name == oth.m_name && m_age == oth.m_age && m_sex == oth.m_sex;
     }
 };
@@ -66,7 +69,8 @@ namespace sylar {
 template<>
 class LexicalCast<std::string, Person> {
 public:
-    Person operator()(const std::string &v) {
+    Person operator()(const std::string &v) 
+    {
         YAML::Node node = YAML::Load(v);
         Person p;
         p.m_name = node["name"].as<std::string>();
@@ -79,7 +83,8 @@ public:
 template<>
 class LexicalCast<Person, std::string> {
 public:
-    std::string operator()(const Person &p) {
+    std::string operator()(const Person &p) 
+    {
         YAML::Node node;
         node["name"] = p.m_name;
         node["age"] = p.m_age;
@@ -101,10 +106,12 @@ sylar::ConfigVar<std::map<std::string, Person>>::ptr g_person_map =
 sylar::ConfigVar<std::map<std::string, std::vector<Person>>>::ptr g_person_vec_map = 
     sylar::Config::Lookup("class.vec_map", std::map<std::string, std::vector<Person>>(), "system vec map");
 
-void test_class() {
+void test_class() 
+{
     static uint64_t id = 0;
 
-    if(!g_person->getListener(id)) {
+    if(!g_person->getListener(id)) 
+    {
         id = g_person->addListener([](const Person &old_value, const Person &new_value){
             SYLAR_LOG_INFO(g_logger) << "g_person value change, old value:" << old_value.toString()
                 << ", new value:" << new_value.toString();
@@ -113,13 +120,16 @@ void test_class() {
 
     SYLAR_LOG_INFO(g_logger) << g_person->getValue().toString();
 
-    for (const auto &i : g_person_map->getValue()) {
+    for (const auto &i : g_person_map->getValue()) 
+    {
         SYLAR_LOG_INFO(g_logger) << i.first << ":" << i.second.toString();
     }
 
-    for(const auto &i : g_person_vec_map->getValue()) {
+    for(const auto &i : g_person_vec_map->getValue()) 
+    {
         SYLAR_LOG_INFO(g_logger) << i.first;
-        for(const auto &j : i.second) {
+        for(const auto &j : i.second) 
+        {
             SYLAR_LOG_INFO(g_logger) << j.toString();
         }
     }
@@ -128,10 +138,12 @@ void test_class() {
 ////////////////////////////////////////////////////////////
 
 template<class T>
-std::string formatArray(const T &v) {
+std::string formatArray(const T &v) 
+{
     std::stringstream ss;
     ss << "[";
-    for(const auto &i:v) {
+    for(const auto &i:v) 
+    {
         ss << " " << i;
     }
     ss << " ]";
@@ -139,17 +151,20 @@ std::string formatArray(const T &v) {
 }
 
 template<class T>
-std::string formatMap(const T &m) {
+std::string formatMap(const T &m) 
+{
     std::stringstream ss;
     ss << "{";
-    for(const auto &i:m) {
+    for(const auto &i:m) 
+    {
         ss << " {" << i.first << ":" << i.second << "}";
     }
     ss << " }";
     return ss.str();
 }
 
-void test_config() {
+void test_config() 
+{
     SYLAR_LOG_INFO(g_logger) << "g_int value: " << g_int->getValue();
     SYLAR_LOG_INFO(g_logger) << "g_float value: " << g_float->getValue();
     SYLAR_LOG_INFO(g_logger) << "g_string value: " << g_string->getValue();
@@ -165,7 +180,8 @@ void test_config() {
 }
 
 int main(int argc, char *argv[]) {
-    // 设置g_int的配置变更回调函数
+    
+    // 添加变量的监听函数
     g_int->addListener([](const int &old_value, const int &new_value) {
         SYLAR_LOG_INFO(g_logger) << "g_int value changed, old_value: " << old_value << ", new_value: " << new_value;
     });

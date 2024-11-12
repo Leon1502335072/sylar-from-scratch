@@ -21,7 +21,7 @@ class TimerManager;
  * @brief 定时器
  */
 class Timer : public std::enable_shared_from_this<Timer> {
-friend class TimerManager;
+friend class TimerManager;  //友元类TimerManager内的方法可以访问Timer中的私有成员
 public:
     /// 定时器的智能指针类型
     typedef std::shared_ptr<Timer> ptr;
@@ -60,19 +60,20 @@ private:
 private:
     /// 是否循环定时器
     bool m_recurring = false;
-    /// 执行周期
+    /// 执行周期（执行间隔）
     uint64_t m_ms = 0;
-    /// 精确的执行时间
+    /// 精确的执行时间（其实就是定时器到时时间）
     uint64_t m_next = 0;
     /// 回调函数
     std::function<void()> m_cb;
-    /// 定时器管理器
+    /// 定时器管理者
     TimerManager* m_manager = nullptr;
 private:
     /**
      * @brief 定时器比较仿函数
      */
-    struct Comparator {
+    struct Comparator 
+    {
         /**
          * @brief 比较定时器的智能指针的大小(按执行时间排序)
          * @param[in] lhs 定时器智能指针
@@ -102,7 +103,7 @@ public:
     virtual ~TimerManager();
 
     /**
-     * @brief 添加定时器
+     * @brief 增加一个定时器
      * @param[in] ms 定时器执行间隔时间
      * @param[in] cb 定时器回调函数
      * @param[in] recurring 是否循环定时器
@@ -122,7 +123,7 @@ public:
                         ,bool recurring = false);
 
     /**
-     * @brief 到最近一个定时器执行的时间间隔(毫秒)
+     * @brief 到最近一个定时器执行的时间间隔，就是集合中第一个定时器
      */
     uint64_t getNextTimer();
 

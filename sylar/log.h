@@ -27,7 +27,7 @@
 #define SYLAR_LOG_ROOT() sylar::LoggerMgr::GetInstance()->getRoot()
 
 /**
- * @brief 获取指定名称的日志器
+ * @brief 获取指定名称的日志器，没有就创建
  */
 #define SYLAR_LOG_NAME(name) sylar::LoggerMgr::GetInstance()->getLogger(name)
 
@@ -88,14 +88,15 @@
 namespace sylar {
 
 /**
- * @brief 日志级别
+ * @brief 日志级别：级别越高，数值越小
  */
 class LogLevel {
 public:
     /**
      * @brief 日志级别枚举，参考log4cpp
      */
-    enum Level { 
+    enum Level 
+    { 
         /// 致命情况，系统不可用
         FATAL  = 0,
         /// 高优先级情况，例如数据库系统崩溃
@@ -133,7 +134,7 @@ public:
 };
 
 /**
- * @brief 日志事件
+ * @brief 日志事件 (在任何位置写一条日志就是一个日志事件)
  */
 class LogEvent {
 public:
@@ -175,7 +176,7 @@ public:
     int32_t getLine() const { return m_line; }
 
     /**
-     * @brief 获取累计运行毫秒数
+     * @brief 获取日志器创建之后到该条日志事件生成的总秒数
      */
     int64_t getElapse() const { return m_elapse; }
 
@@ -200,7 +201,7 @@ public:
     const std::string &getThreadName() const { return m_threadName; }
 
     /**
-     * @brief 获取内容字节流，用于流式写入日志
+     * @brief 返回m_ss的引用 用于接收日志事件的内容：m_ss << "hello world!"
      */
     std::stringstream &getSS() { return m_ss; }
 
@@ -220,26 +221,16 @@ public:
     void vprintf(const char *fmt, va_list ap);
 
 private:
-    /// 日志级别
-    LogLevel::Level m_level;
-    /// 日志内容，使用stringstream存储，便于流式写入日志
-    std::stringstream m_ss;
-    /// 文件名
-    const char *m_file = nullptr;
-    /// 行号
-    int32_t m_line = 0;
-    /// 从日志器创建开始到当前的耗时
-    int64_t m_elapse = 0;
-    /// 线程id
-    uint32_t m_threadId = 0;
-    /// 协程id
-    uint64_t m_fiberId = 0;
-    /// UTC时间戳
-    time_t m_time;
-    /// 线程名称
-    std::string m_threadName;
-    /// 日志器名称
-    std::string m_loggerName;
+    LogLevel::Level m_level;         // 日志级别
+    std::stringstream m_ss;          // 日志内容，其实是现将日志内容存在这里 然后再输入到输出地
+    const char *m_file = nullptr;    // 文件名
+    int32_t m_line = 0;              // 行号
+    int64_t m_elapse = 0;            // 从日志器创建开始到当前日志事件的耗时
+    uint32_t m_threadId = 0;         // 线程id
+    uint64_t m_fiberId = 0;          // 协程id
+    time_t m_time;                   // UTC时间戳
+    std::string m_threadName;        // 线程名称
+    std::string m_loggerName;        // 日志器名称：root日志 system日志等等
 };
 
 /**
@@ -267,14 +258,14 @@ public:
      * - %%T 制表符
      * - %%n 换行
      * 
-     * 默认格式：%%d{%%Y-%%m-%%d %%H:%%M:%%S}%%T%%t%%T%%N%%T%%F%%T[%%p]%%T[%%c]%%T%%f:%%l%%T%%m%%n
+     * 默认格式："%d{%Y-%m-%d %H:%M:%S} [%rms]%T%t%T%N%T%F%T[%p]%T[%c]%T%f:%l%T%m%n"
      * 
      * 默认格式描述：年-月-日 时:分:秒 [累计运行毫秒数] \\t 线程id \\t 线程名称 \\t 协程id \\t [日志级别] \\t [日志器名称] \\t 文件名:行号 \\t 日志消息 换行符
      */
     LogFormatter(const std::string &pattern = "%d{%Y-%m-%d %H:%M:%S} [%rms]%T%t%T%N%T%F%T[%p]%T[%c]%T%f:%l%T%m%n");
 
     /**
-     * @brief 初始化，解析格式模板，提取模板项
+     * @brief 初始化，解析格式模板提取模板项，该函数在LogFormatter的构造函数中被调用，即创建就初始化
      */
     void init();
 
@@ -325,7 +316,7 @@ public:
 private:
     /// 日志格式模板
     std::string m_pattern;
-    /// 解析后的格式模板数组
+    /// 解析后的格式模板数组 装的是父类型指向子类空间的智能指针，实现多态
     std::vector<FormatItem::ptr> m_items;
     /// 是否出错
     bool m_error = false;
@@ -342,7 +333,7 @@ public:
 
     /**
      * @brief 构造函数
-     * @param[in] default_formatter 默认日志格式器
+     * @param[in] default_formatter 默认日志格式对象 LogFormatter的智能指针
      */
     LogAppender(LogFormatter::ptr default_formatter);
     
@@ -374,7 +365,7 @@ public:
 protected:
     /// Mutex
     MutexType m_mutex;
-    /// 日志格式器
+    /// 日志格式器 用于存储用户自己设置的日志格式的格式器
     LogFormatter::ptr m_formatter;
     /// 默认日志格式器
     LogFormatter::ptr m_defaultFormatter;
@@ -435,7 +426,8 @@ public:
 private:
     /// 文件路径
     std::string m_filename;
-    /// 文件流
+    /// 文件流---以流式追加的方式打开文件m_filename，然后往m_filestream输入的内容就会直接输出到文件m_filename
+    /// m_filestream.open(m_filename, std::ios::app) app 是追加方式的宏
     std::ofstream m_filestream;
     /// 上次重打打开时间
     uint64_t m_lastTime = 0;
@@ -522,7 +514,7 @@ private:
 class LogEventWrap{
 public:
     /**
-     * @brief 构造函数
+     * @brief 构造函数 将一个日志器和事件包装在一起
      * @param[in] logger 日志器 
      * @param[in] event 日志事件
      */
@@ -554,7 +546,7 @@ public:
     typedef Spinlock MutexType;
 
     /**
-     * @brief 构造函数
+     * @brief 构造函数 创建了一个root日志器，且添加了一个输出到标准输出（控制台的输出地）
      */
     LoggerManager();
 
@@ -564,7 +556,7 @@ public:
     void init();
 
     /**
-     * @brief 获取指定名称的日志器
+     * @brief 获取/创建日志器，新创建的日志器没有输出地 需要用户自己添加
      */
     Logger::ptr getLogger(const std::string &name);
 
@@ -587,7 +579,7 @@ private:
     Logger::ptr m_root;
 };
 
-/// 日志器管理类单例
+/// 日志器管理类的单例类型LoggerMgr（重命名）
 typedef sylar::Singleton<LoggerManager> LoggerMgr;
 
 } // end namespace sylar

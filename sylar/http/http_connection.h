@@ -23,13 +23,15 @@ namespace http {
 /**
  * @brief HTTP响应结果
  */
-struct HttpResult {
+struct HttpResult 
+{
     /// 智能指针类型定义
     typedef std::shared_ptr<HttpResult> ptr;
     /**
      * @brief 错误码定义
      */
-    enum class Error {
+    enum class Error 
+    {
         /// 正常
         OK = 0,
         /// 非法URL
@@ -61,9 +63,9 @@ struct HttpResult {
     HttpResult(int _result
                ,HttpResponse::ptr _response
                ,const std::string& _error)
-        :result(_result)
-        ,response(_response)
-        ,error(_error) {}
+               :result(_result)
+               ,response(_response)
+               ,error(_error) {}
 
     /// 错误码
     int result;
@@ -94,9 +96,9 @@ public:
      * @return 返回HTTP结果结构体
      */
     static HttpResult::ptr DoGet(const std::string& url
-                            , uint64_t timeout_ms
-                            , const std::map<std::string, std::string>& headers = {}
-                            , const std::string& body = "");
+                                ,uint64_t timeout_ms
+                                ,const std::map<std::string, std::string>& headers = {}
+                                ,const std::string& body = "");
 
     /**
      * @brief 发送HTTP的GET请求
@@ -107,9 +109,9 @@ public:
      * @return 返回HTTP结果结构体
      */
     static HttpResult::ptr DoGet(Uri::ptr uri
-                            , uint64_t timeout_ms
-                            , const std::map<std::string, std::string>& headers = {}
-                            , const std::string& body = "");
+                                ,uint64_t timeout_ms
+                                ,const std::map<std::string, std::string>& headers = {}
+                                ,const std::string& body = "");
 
     /**
      * @brief 发送HTTP的POST请求
@@ -120,9 +122,9 @@ public:
      * @return 返回HTTP结果结构体
      */
     static HttpResult::ptr DoPost(const std::string& url
-                            , uint64_t timeout_ms
-                            , const std::map<std::string, std::string>& headers = {}
-                            , const std::string& body = "");
+                                 ,uint64_t timeout_ms
+                                 ,const std::map<std::string, std::string>& headers = {}
+                                 ,const std::string& body = "");
 
     /**
      * @brief 发送HTTP的POST请求
@@ -133,10 +135,10 @@ public:
      * @return 返回HTTP结果结构体
      */
     static HttpResult::ptr DoPost(Uri::ptr uri
-                            , uint64_t timeout_ms
-                            , const std::map<std::string, std::string>& headers = {}
-                            , const std::string& body = "");
-
+                                 ,uint64_t timeout_ms
+                                 ,const std::map<std::string, std::string>& headers = {}
+                                 ,const std::string& body = "");
+ 
     /**
      * @brief 发送HTTP请求
      * @param[in] method 请求类型
@@ -147,10 +149,10 @@ public:
      * @return 返回HTTP结果结构体
      */
     static HttpResult::ptr DoRequest(HttpMethod method
-                            , const std::string& url
-                            , uint64_t timeout_ms
-                            , const std::map<std::string, std::string>& headers = {}
-                            , const std::string& body = "");
+                                    ,const std::string& url
+                                    ,uint64_t timeout_ms
+                                    ,const std::map<std::string, std::string>& headers = {}
+                                    ,const std::string& body = "");
 
     /**
      * @brief 发送HTTP请求
@@ -162,10 +164,10 @@ public:
      * @return 返回HTTP结果结构体
      */
     static HttpResult::ptr DoRequest(HttpMethod method
-                            , Uri::ptr uri
-                            , uint64_t timeout_ms
-                            , const std::map<std::string, std::string>& headers = {}
-                            , const std::string& body = "");
+                                    ,Uri::ptr uri
+                                    ,uint64_t timeout_ms
+                                    ,const std::map<std::string, std::string>& headers = {}
+                                    ,const std::string& body = "");
 
     /**
      * @brief 发送HTTP请求
@@ -175,8 +177,8 @@ public:
      * @return 返回HTTP结果结构体
      */
     static HttpResult::ptr DoRequest(HttpRequest::ptr req
-                            , Uri::ptr uri
-                            , uint64_t timeout_ms);
+                                    ,Uri::ptr uri
+                                    ,uint64_t timeout_ms);
 
     /**
      * @brief 构造函数
@@ -208,6 +210,9 @@ private:
     uint64_t m_request = 0;
 };
 
+/**
+ * @brief 连接池
+ */
 class HttpConnectionPool {
 public:
     typedef std::shared_ptr<HttpConnectionPool> ptr;
@@ -246,9 +251,9 @@ public:
      * @return 返回HTTP结果结构体
      */
     HttpResult::ptr doGet(const std::string& url
-                          , uint64_t timeout_ms
-                          , const std::map<std::string, std::string>& headers = {}
-                          , const std::string& body = "");
+                          ,uint64_t timeout_ms
+                          ,const std::map<std::string, std::string>& headers = {}
+                          ,const std::string& body = "");
 
     /**
      * @brief 发送HTTP的GET请求
@@ -259,9 +264,9 @@ public:
      * @return 返回HTTP结果结构体
      */
     HttpResult::ptr doGet(Uri::ptr uri
-                           , uint64_t timeout_ms
-                           , const std::map<std::string, std::string>& headers = {}
-                           , const std::string& body = "");
+                         ,uint64_t timeout_ms
+                         ,const std::map<std::string, std::string>& headers = {}
+                         ,const std::string& body = "");
 
     /**
      * @brief 发送HTTP的POST请求
@@ -272,9 +277,9 @@ public:
      * @return 返回HTTP结果结构体
      */
     HttpResult::ptr doPost(const std::string& url
-                           , uint64_t timeout_ms
-                           , const std::map<std::string, std::string>& headers = {}
-                           , const std::string& body = "");
+                           ,uint64_t timeout_ms
+                           ,const std::map<std::string, std::string>& headers = {}
+                           ,const std::string& body = "");
 
     /**
      * @brief 发送HTTP的POST请求
@@ -285,9 +290,9 @@ public:
      * @return 返回HTTP结果结构体
      */
     HttpResult::ptr doPost(Uri::ptr uri
-                           , uint64_t timeout_ms
-                           , const std::map<std::string, std::string>& headers = {}
-                           , const std::string& body = "");
+                           ,uint64_t timeout_ms
+                           ,const std::map<std::string, std::string>& headers = {}
+                           ,const std::string& body = "");
 
     /**
      * @brief 发送HTTP请求
@@ -299,10 +304,10 @@ public:
      * @return 返回HTTP结果结构体
      */
     HttpResult::ptr doRequest(HttpMethod method
-                            , const std::string& url
-                            , uint64_t timeout_ms
-                            , const std::map<std::string, std::string>& headers = {}
-                            , const std::string& body = "");
+                             ,const std::string& url
+                             ,uint64_t timeout_ms
+                             ,const std::map<std::string, std::string>& headers = {}
+                             ,const std::string& body = "");
 
     /**
      * @brief 发送HTTP请求
@@ -314,10 +319,10 @@ public:
      * @return 返回HTTP结果结构体
      */
     HttpResult::ptr doRequest(HttpMethod method
-                            , Uri::ptr uri
-                            , uint64_t timeout_ms
-                            , const std::map<std::string, std::string>& headers = {}
-                            , const std::string& body = "");
+                             ,Uri::ptr uri
+                             ,uint64_t timeout_ms
+                             ,const std::map<std::string, std::string>& headers = {}
+                             ,const std::string& body = "");
 
     /**
      * @brief 发送HTTP请求
@@ -326,9 +331,11 @@ public:
      * @return 返回HTTP结果结构体
      */
     HttpResult::ptr doRequest(HttpRequest::ptr req
-                            , uint64_t timeout_ms);
+                             ,uint64_t timeout_ms);
+    
 private:
     static void ReleasePtr(HttpConnection* ptr, HttpConnectionPool* pool);
+
 private:
     /// Host字段默认值
     std::string m_host;

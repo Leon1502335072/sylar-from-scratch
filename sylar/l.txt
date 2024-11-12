@@ -1,0 +1,52 @@
+1 d
+0  [
+1 r
+0 ms]
+1 T
+1 t
+1 T
+1 N
+1 T
+1 F
+1 T
+0 [
+1 p
+0 ]
+1 T
+0 [
+1 c
+0 ]
+1 T
+1 f
+0 :
+1 l
+1 T
+1 m
+1 n
+                     
+2024-04-11 06:28:34 [1009ms]	4473	brand_new_threa	0	[FATAL]	[root]	tests/test_log.cpp:40	fatal msg
+                    累计毫秒数  线程号   线程名        协程号 日志等级 日志器名 文件名             行号  日志内容
+
+日志流式输出到控制台（标准输出）：
+1、首先通过 GetInstance()->getLogger(logger) 创建一个日志器logger 并添加输出地 
+   addAppender(LogAppender::ptr(new StdoutLogAppender)), 在new一个StdoutLogAppender时会回创建一个
+   Logformat的智能指针传给父类的LogAppender，在Logformat的构造中有一个默认的日志格式，如果用户没有传入自己的日志格式，
+   那么系统就会启用默认的日志格式，也就是在formatter的构造中调init函数进行模版分析
+
+2、包装器将一个日志器logger和日志事件包装在一起，在创建一个包装器的时候就创建了一个日志事件 通过宏定义，
+   创建日志事件的时候通过日志事件的构造函数获得日志器名、级别、文件名、行号、运行时间、线程id、协程id、
+   时间(总秒数)、线程名称等信息。然后返回日志事件里的一个stringtream类型的变量用于流式的输入和输出
+
+3、再定义各个级别的日志宏，例如：
+   #define SYLAR_LOG_FATAL(logger) SYLAR_LOG_LEVEL(logger, sylar::LogLevel::FATAL)
+
+4、例如输入一个日志事件内容 YLAR_LOG_FATAL(logger) << "hello";
+
+5、在包装器的析构函数中日志器logger会调自己的log(LogEvent::ptr)函数，log(LogEvent::ptr)函数内部会循环自己的
+   日志输出地的智能指针，将日志输出到指定的输出地。
+   
+6、循环输出地appender的智能指针时，通过该指针调Appender类内部的log(LogEvent::ptr)函数，这个函数内部会通过格式化
+   formatter智能指针再根据日志的格式调format函数实现多态，在format函数内部会创建一个stringstream的变量 再根据格
+   式将所有的日志信息输入到这个变量中 最后输出到输出地
+
+

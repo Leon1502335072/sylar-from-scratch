@@ -208,7 +208,7 @@ public:
     IPv4Address(const sockaddr_in &address);
 
     /**
-     * @brief 通过二进制地址构造IPv4Address
+     * @brief 通过二进制地址构造IPv4Address（默认构造）
      * @param[in] address 二进制地址address
      * @param[in] port 端口号
      */
@@ -219,9 +219,9 @@ public:
     socklen_t getAddrLen() const override;
     std::ostream &insert(std::ostream &os) const override;
 
-    IPAddress::ptr broadcastAddress(uint32_t prefix_len) override;
-    IPAddress::ptr networkAddress(uint32_t prefix_len) override;
-    IPAddress::ptr subnetMask(uint32_t prefix_len) override;
+    IPAddress::ptr broadcastAddress(uint32_t prefix_len) override;   // 广播地址（大端）
+    IPAddress::ptr networkAddress(uint32_t prefix_len) override;     // 网段（大端）
+    IPAddress::ptr subnetMask(uint32_t prefix_len) override;         // 子网掩码（大端）
     uint32_t getPort() const override;
     void setPort(uint16_t v) override;
 
@@ -301,7 +301,7 @@ public:
 
 private:
     sockaddr_un m_addr;
-    socklen_t m_length;
+    socklen_t m_length; // sockaddr_un结构体的总长度
 };
 
 /**
@@ -322,7 +322,7 @@ private:
 };
 
 /**
- * @brief 流式输出Address
+ * @brief 流式输出Address 其实就是重载了<<
  */
 std::ostream &operator<<(std::ostream &os, const Address &addr);
 

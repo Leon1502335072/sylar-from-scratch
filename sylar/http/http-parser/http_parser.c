@@ -2144,8 +2144,7 @@ http_status_str (enum http_status s)
   }
 }
 
-void
-http_parser_init (http_parser *parser, enum http_parser_type t)
+void http_parser_init (http_parser *parser, enum http_parser_type t)
 {
   void *data = parser->data; /* preserve application data */
   memset(parser, 0, sizeof(*parser));
@@ -2155,14 +2154,13 @@ http_parser_init (http_parser *parser, enum http_parser_type t)
   parser->http_errno = HPE_OK;
 }
 
-void
-http_parser_settings_init(http_parser_settings *settings)
+void http_parser_settings_init(http_parser_settings *settings)
 {
   memset(settings, 0, sizeof(*settings));
 }
 
-const char *
-http_errno_name(enum http_errno err) {
+const char *http_errno_name(enum http_errno err)
+{
   assert(((size_t) err) < ARRAY_SIZE(http_strerror_tab));
   return http_strerror_tab[err].name;
 }

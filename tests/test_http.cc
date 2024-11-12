@@ -6,7 +6,9 @@
  */
 #include "sylar/sylar.h"
 
-void test_http_request() {
+// 测试request
+void test_http_request() 
+{
     sylar::http::HttpRequest req;
     req.setMethod(sylar::http::HttpMethod::GET);
     req.setVersion(0x11);
@@ -30,7 +32,8 @@ void test_http_request() {
     std::cout << std::endl;
 }
 
-void test_http_response() {
+void test_http_response() 
+{
     sylar::http::HttpResponse rsp;
     rsp.setStatus(sylar::http::HttpStatus::OK);
     rsp.setHeader("Content-Type", "text/html");
@@ -46,7 +49,8 @@ void test_http_response() {
     rsp.dump(std::cout);
 }
 
-int main() {
+int main() 
+{
     test_http_request();
     test_http_response();
     return 0;

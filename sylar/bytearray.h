@@ -28,7 +28,8 @@ public:
     /**
      * @brief ByteArray的存储节点
      */
-    struct Node {
+    struct Node 
+    {
         /**
          * @brief 构造指定大小的内存块
          * @param[in] s 内存块字节数
@@ -65,23 +66,26 @@ public:
     ~ByteArray();
 
     /**
-     * @brief 写入固定长度int8_t类型的数据
+     * @brief 写入固定长度int8_t类型的数据 （写有符号的一字节数据，即一个字节一个字节写入内存块）
      * @post m_position += sizeof(value)
      *       如果m_position > m_size 则 m_size = m_position
      */
     void writeFint8  (int8_t value);
+
     /**
      * @brief 写入固定长度uint8_t类型的数据
      * @post m_position += sizeof(value)
      *       如果m_position > m_size 则 m_size = m_position
      */
     void writeFuint8 (uint8_t value);
+
     /**
      * @brief 写入固定长度int16_t类型的数据(大端/小端)
      * @post m_position += sizeof(value)
      *       如果m_position > m_size 则 m_size = m_position
      */
     void writeFint16 (int16_t value);
+    
     /**
      * @brief 写入固定长度uint16_t类型的数据(大端/小端)
      * @post m_position += sizeof(value)
@@ -123,6 +127,7 @@ public:
      *       如果m_position > m_size 则 m_size = m_position
      */
     void writeInt32  (int32_t value);
+
     /**
      * @brief 写入无符号Varint32类型的数据
      * @post m_position += 实际占用内存(1 ~ 5)
@@ -145,14 +150,14 @@ public:
     void writeUint64 (uint64_t value);
 
     /**
-     * @brief 写入float类型的数据
+     * @brief 写入float类型的数据（转成int32_t写的）
      * @post m_position += sizeof(value)
      *       如果m_position > m_size 则 m_size = m_position
      */
     void writeFloat  (float value);
 
     /**
-     * @brief 写入double类型的数据
+     * @brief 写入double类型的数据（转成int64_t写的）
      * @post m_position += sizeof(value)
      *       如果m_position > m_size 则 m_size = m_position
      */
@@ -345,7 +350,7 @@ public:
 
     /**
      * @brief 写入size长度的数据
-     * @param[in] buf 内存缓存指针
+     * @param[in] buf 外部的内存指针，即要将这个buf所指向的内存数据写到节点中
      * @param[in] size 数据大小
      * @post m_position += size, 如果m_position > m_size 则 m_size = m_position
      */
@@ -353,8 +358,8 @@ public:
 
     /**
      * @brief 读取size长度的数据
-     * @param[out] buf 内存缓存指针
-     * @param[in] size 数据大小
+     * @param[out] buf 外部的内存指针，即要将内存块中的数据读到这个buf所指向的空间
+     * @param[in] size 数据大小（多少字节）
      * @post m_position += size, 如果m_position > m_size 则 m_size = m_position
      * @exception 如果getReadSize() < size 则抛出 std::out_of_range
      */
@@ -362,7 +367,7 @@ public:
 
     /**
      * @brief 读取size长度的数据
-     * @param[out] buf 内存缓存指针
+     * @param[out] buf 外部的内存指针，即要将内存块中的数据读到这个buf所指向的空间
      * @param[in] size 数据大小
      * @param[in] position 读取开始位置
      * @exception 如果 (m_size - position) < size 则抛出 std::out_of_range
@@ -441,7 +446,7 @@ public:
     uint64_t getReadBuffers(std::vector<iovec>& buffers, uint64_t len, uint64_t position) const;
 
     /**
-     * @brief 获取可写入的缓存,保存成iovec数组
+     * @brief 获取可写入的缓存,保存成iovec数组（不会改变m_position）
      * @param[out] buffers 保存可写入的内存的iovec数组
      * @param[in] len 写入的长度
      * @return 返回实际的长度
@@ -456,7 +461,7 @@ public:
 private:
     
     /**
-     * @brief 扩容ByteArray,使其可以容纳size个数据(如果原本可以可以容纳,则不扩容)
+     * @brief 扩容ByteArray,使其可以容纳size个数据(如果原本可以可以容纳,则不扩容)，其实是增加到size的大下
      */
     void addCapacity(size_t size);
 
@@ -464,6 +469,12 @@ private:
      * @brief 获取当前的可写入容量
      */
     size_t getCapacity() const { return m_capacity - m_position;}
+
+    /**
+    *  @brief 获取总容量
+    */
+    size_t getTotalCapacity() const { return m_capacity; }
+
 private:
     /// 内存块的大小
     size_t m_baseSize;

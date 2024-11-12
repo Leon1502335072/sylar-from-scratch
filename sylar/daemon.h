@@ -40,8 +40,8 @@ typedef sylar::Singleton<ProcessInfo> ProcessInfoMgr;
  * @return 返回程序的执行结果
  */
 int start_daemon(int argc, char** argv
-                 , std::function<int(int argc, char** argv)> main_cb
-                 , bool is_daemon);
+                ,std::function<int(int argc, char** argv)> main_cb
+                ,bool is_daemon);
 
 }
 

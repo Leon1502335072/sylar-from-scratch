@@ -15,7 +15,7 @@
 namespace sylar {
 
 /**
- * @brief 流结构
+ * @brief 流结构 
  */
 class Stream {
 public:
@@ -27,7 +27,7 @@ public:
 
     /**
      * @brief 读数据
-     * @param[out] buffer 接收数据的内存
+     * @param[out] buffer 接收数据的内存（读length字节的数据到buffer）
      * @param[in] length 接收数据的内存大小
      * @return
      *      @retval >0 返回接收到的数据的实际大小
@@ -38,7 +38,7 @@ public:
 
     /**
      * @brief 读数据
-     * @param[out] ba 接收数据的ByteArray
+     * @param[out] ba 接收数据的ByteArray（读length字节的数据到ByteArray）
      * @param[in] length 接收数据的内存大小
      * @return
      *      @retval >0 返回接收到的数据的实际大小
@@ -71,7 +71,7 @@ public:
 
     /**
      * @brief 写数据
-     * @param[in] buffer 写数据的内存
+     * @param[in] buffer 待写数据的内存（即将buffer中的数据写出去）
      * @param[in] length 写入数据的内存大小
      * @return
      *      @retval >0 返回写入到的数据的实际大小
@@ -82,7 +82,7 @@ public:
 
     /**
      * @brief 写数据
-     * @param[in] ba 写数据的ByteArray
+     * @param[in] ba 写数据的ByteArray（即将ByteArray中的数据写出去）
      * @param[in] length 写入数据的内存大小
      * @return
      *      @retval >0 返回写入到的数据的实际大小
@@ -93,7 +93,7 @@ public:
 
     /**
      * @brief 写固定长度的数据
-     * @param[in] buffer 写数据的内存
+     * @param[in] buffer 待写数据的内存（即将buffer中的数据写出去）
      * @param[in] length 写入数据的内存大小
      * @return
      *      @retval >0 返回写入到的数据的实际大小
@@ -104,7 +104,7 @@ public:
 
     /**
      * @brief 写固定长度的数据
-     * @param[in] ba 写数据的ByteArray
+     * @param[in] ba 呆写数据的ByteArray（即将ByteArray中的数据写出去）
      * @param[in] length 写入数据的内存大小
      * @return
      *      @retval >0 返回写入到的数据的实际大小

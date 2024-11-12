@@ -32,6 +32,11 @@ public:
     Noncopyable(const Noncopyable&) = delete;
 
     /**
+     * @brief 拷贝构造函数(禁用)（右值拷贝）
+     */
+    Noncopyable(const Noncopyable&&) = delete;
+
+    /**
      * @brief 赋值函数(禁用)
      */
     Noncopyable& operator=(const Noncopyable&) = delete;

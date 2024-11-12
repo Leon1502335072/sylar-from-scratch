@@ -21,8 +21,8 @@ namespace sylar {
 /**
  * @brief TCP服务器封装
  */
-class TcpServer : public std::enable_shared_from_this<TcpServer>
-                    , Noncopyable {
+class TcpServer : public std::enable_shared_from_this<TcpServer>, Noncopyable 
+{                   
 public:
     typedef std::shared_ptr<TcpServer> ptr;
     /**
@@ -110,7 +110,7 @@ protected:
 protected:
     /// 监听Socket数组
     std::vector<Socket::ptr> m_socks;
-    /// 新连接的Socket工作的调度器
+    /// 新连接的Socket工作的调度器（客户端的socket工作调度器）
     IOManager* m_ioWorker;
     /// 服务器Socket接收连接的调度器
     IOManager* m_acceptWorker;

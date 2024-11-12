@@ -37,7 +37,7 @@ public:
     ~SocketStream();
 
     /**
-     * @brief 读取数据
+     * @brief 读取数据 socket->read(buffer, len) 从socket缓冲区读出len字节数据到buffer
      * @param[out] buffer 待接收数据的内存
      * @param[in] length 待接收数据的内存长度
      * @return
@@ -48,7 +48,7 @@ public:
     virtual int read(void* buffer, size_t length) override;
 
     /**
-     * @brief 读取数据
+     * @brief 读取数据 socket->read(ba, len) 从socket缓冲区读出len字节数据到ba
      * @param[out] ba 接收数据的ByteArray
      * @param[in] length 待接收数据的内存长度
      * @return
@@ -59,7 +59,7 @@ public:
     virtual int read(ByteArray::ptr ba, size_t length) override;
 
     /**
-     * @brief 写入数据
+     * @brief 写入数据 socket->write(buffer, len) 将buffer中len字节数据写到socket缓冲区
      * @param[in] buffer 待发送数据的内存
      * @param[in] length 待发送数据的内存长度
      * @return
@@ -70,7 +70,7 @@ public:
     virtual int write(const void* buffer, size_t length) override;
 
     /**
-     * @brief 写入数据
+     * @brief 写入数据 socket->write(ba, len) 将ba中len字节数据写到socket缓冲区
      * @param[in] ba 待发送数据的ByteArray
      * @param[in] length 待发送数据的内存长度
      * @return
@@ -95,9 +95,13 @@ public:
      */
     bool isConnected() const;
 
+    // 返回远端地址
     Address::ptr getRemoteAddress();
+    // 返回本地地址
     Address::ptr getLocalAddress();
+    // 返回远端地址的string类型
     std::string getRemoteAddressString();
+    // 返回本地地址的string类型
     std::string getLocalAddressString();
 protected:
     /// Socket类

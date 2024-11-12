@@ -29,7 +29,7 @@ public:
     bool init(int argc, char **argv);
 
     /**
-     * @brief 添加自定义环境变量，存储在程序内部的map结构中
+     * @brief 添加自定义环境变量，存储在程序内部的map结构中。
      */
     void add(const std::string &key, const std::string &val);
 
@@ -115,7 +115,7 @@ private:
     std::string m_program;
     /// 程序完整路径名，也就是/proc/$pid/exe软链接指定的路径 
     std::string m_exe;
-    /// 当前路径，从argv[0]中获取
+    /// 当前路径，根据argv[0]拿到（其实就是当前文件所在的目录，从根目录开始）
     std::string m_cwd;
 };
 

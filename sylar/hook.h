@@ -29,11 +29,18 @@ namespace sylar {
     void set_hook_enable(bool flag);
 }
 
-extern "C" {
-
-//sleep
+//加上extern "C"后，会指示编译器这部分代码按C语言（而不是C++）的方式进行编译
+extern "C" 
+{
+//标准定义格式：extern 类型名 变量名；
+/*
+    6.函数指针
+    例如： typedef unsigned int (*sleep_fun)(unsigned int seconds)
+    描述： sleep_fun等价于unsigned int (*)(unsigned int seconds)类型 即就是一种函数指针类型
+       sleep_fun pf等价于unsigned int (*pf)(unsigned int seconds)声明，pf是一个函数指针变量
+*/
 typedef unsigned int (*sleep_fun)(unsigned int seconds);
-extern sleep_fun sleep_f;
+extern sleep_fun sleep_f; //留下老方法的接口
 
 typedef int (*usleep_fun)(useconds_t usec);
 extern usleep_fun usleep_f;

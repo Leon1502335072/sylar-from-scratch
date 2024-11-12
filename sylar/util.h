@@ -19,7 +19,7 @@
 namespace sylar {
 
 /**
- * @brief 获取线程id
+ * @brief 获取线程id，全局唯一id，通过系统调用syscall(SYS_gettid)来获取
  * @note 这里不要把pid_t和pthread_t混淆，关于它们之的区别可参考gettid(2)
  */
 pid_t GetThreadId();
@@ -216,7 +216,8 @@ public:
  * @brief 获取T类型的类型字符串
  */
 template <class T>
-const char *TypeToName() {
+const char *TypeToName() 
+{
     static const char *s_name = abi::__cxa_demangle(typeid(T).name(), nullptr, nullptr, nullptr);
     return s_name;
 }

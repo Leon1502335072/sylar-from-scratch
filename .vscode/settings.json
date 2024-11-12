@@ -92,6 +92,8 @@
         "complex": "cpp",
         "unordered_set": "cpp",
         "iomanip": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "valarray": "cpp"
     },
+    "C_Cpp.errorSquiggles": "disabled",
 }

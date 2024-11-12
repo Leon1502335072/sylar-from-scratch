@@ -19,12 +19,15 @@ int sockfd;
 void watch_io_read();
 
 // 写事件回调，只执行一次，用于判断非阻塞套接字connect成功
-void do_io_write() {
+void do_io_write() 
+{
     SYLAR_LOG_INFO(g_logger) << "write callback";
     int so_err;
     socklen_t len = size_t(so_err);
+    // 用于获取sockfd的一些信息，比如sockfd的一些错误就可以通过这个函数来获取并保存在so_err中
     getsockopt(sockfd, SOL_SOCKET, SO_ERROR, &so_err, &len);
-    if(so_err) {
+    if(so_err) 
+    {
         SYLAR_LOG_INFO(g_logger) << "connect fail";
         return;
     } 
@@ -32,19 +35,25 @@ void do_io_write() {
 }
 
 // 读事件回调，每次读取之后如果套接字未关闭，需要重新添加
-void do_io_read() {
+void do_io_read() 
+{
     SYLAR_LOG_INFO(g_logger) << "read callback";
     char buf[1024] = {0};
     int readlen = 0;
     readlen = read(sockfd, buf, sizeof(buf));
-    if(readlen > 0) {
+    if(readlen > 0) 
+    {
         buf[readlen] = '\0';
         SYLAR_LOG_INFO(g_logger) << "read " << readlen << " bytes, read: " << buf;
-    } else if(readlen == 0) {
+    } 
+    else if(readlen == 0) 
+    {
         SYLAR_LOG_INFO(g_logger) << "peer closed";
         close(sockfd);
         return;
-    } else {
+    } 
+    else 
+    {
         SYLAR_LOG_ERROR(g_logger) << "err, errno=" << errno << ", errstr=" << strerror(errno);
         close(sockfd);
         return;
@@ -53,12 +62,14 @@ void do_io_read() {
     sylar::IOManager::GetThis()->schedule(watch_io_read);
 }
 
-void watch_io_read() {
+void watch_io_read() 
+{
     SYLAR_LOG_INFO(g_logger) << "watch_io_read";
     sylar::IOManager::GetThis()->addEvent(sockfd, sylar::IOManager::READ, do_io_read);
 }
 
-void test_io() {
+void test_io() 
+{
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     SYLAR_ASSERT(sockfd > 0);
     fcntl(sockfd, F_SETFL, O_NONBLOCK);
@@ -70,33 +81,79 @@ void test_io() {
     inet_pton(AF_INET, "10.10.19.159", &servaddr.sin_addr.s_addr);
 
     int rt = connect(sockfd, (const sockaddr*)&servaddr, sizeof(servaddr));
-    if(rt != 0) {
-        if(errno == EINPROGRESS) {
+    if(rt != 0) 
+    {
+        if(errno == EINPROGRESS) 
+        {
             SYLAR_LOG_INFO(g_logger) << "EINPROGRESS";
             // 注册写事件回调，只用于判断connect是否成功
             // 非阻塞的TCP套接字connect一般无法立即建立连接，要通过套接字可写来判断connect是否已经成功
             sylar::IOManager::GetThis()->addEvent(sockfd, sylar::IOManager::WRITE, do_io_write);
             // 注册读事件回调，注意事件是一次性的
             sylar::IOManager::GetThis()->addEvent(sockfd, sylar::IOManager::READ, do_io_read);
-        } else {
+        } 
+        else 
+        {
             SYLAR_LOG_ERROR(g_logger) << "connect error, errno:" << errno << ", errstr:" << strerror(errno);
         }
-    } else {
+    } 
+    else 
+    {
         SYLAR_LOG_ERROR(g_logger) << "else, errno:" << errno << ", errstr:" << strerror(errno);
     }
 }
 
-void test_iomanager() {
+void test_iomanager() 
+{
     sylar::IOManager iom;
     // sylar::IOManager iom(10); // 演示多线程下IO协程在不同线程之间切换
     iom.schedule(test_io);
 }
 
-int main(int argc, char *argv[]) {
+// void myfiber()
+// {
+//     SYLAR_LOG_INFO(g_logger) << "myfiber_fiber_id = " << sylar::Fiber::GetFiberId() << " is running";
+//     sleep(1);
+//     SYLAR_LOG_INFO(g_logger) << "myfiber_fiber_id = " << sylar::Fiber::GetFiberId() << " end";
+// }
+// void myfiber()
+// {
+//     SYLAR_LOG_INFO(g_logger) << "my_fiber begin ";
+//     while(1) 
+//     {
+//         sleep_f(1);
+//         SYLAR_LOG_INFO(g_logger) << "my_fiber_fiber_id = " << sylar::Fiber::GetFiberId() << " is running";
+//     }
+//     SYLAR_LOG_INFO(g_logger) << "my_fiber_fiber_id = " << sylar::Fiber::GetFiberId() << " end";
+// }
+
+
+// void mytest()
+// {
+//     SYLAR_LOG_INFO(g_logger) << "mytest begin ";
+//     while(1) 
+//     {
+//         sleep_f(1);
+//         SYLAR_LOG_INFO(g_logger) << "mytest_fiber_id = " << sylar::Fiber::GetFiberId() << " is running";
+//     }
+
+//     SYLAR_LOG_INFO(g_logger) << "mytest_fiber_id = " << sylar::Fiber::GetFiberId() << " end";
+
+// }
+
+int main(int argc, char *argv[]) 
+{
     sylar::EnvMgr::GetInstance()->init(argc, argv);
     sylar::Config::LoadFromConfDir(sylar::EnvMgr::GetInstance()->getConfigPath());
     
     test_iomanager();
+    // SYLAR_LOG_INFO(g_logger) << "main thread " << sylar::Thread::GetName() << " is running";
+    // sylar::IOManager iom(1);
+    // iom.schedule(&mytest);
+    // iom.schedule(&myfiber);
+
+    // SYLAR_LOG_INFO(g_logger) << "task count = " << iom.getTaskCount();
+    
 
     return 0;
 }

@@ -1,0 +1,32 @@
+2024-10-11 02:57:25 [0ms]	53081	brand_new_threa	0	[ERROR]	[wzllogger]	tests/test_log.cpp:84	wangzhilei->err msg
+2024-10-11 02:57:25 [0ms]	53081	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:85	wangzhilei->info msg wangzhilei
+2024-10-11 02:57:25 [0ms]	53081	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:86	show tables
+2024-10-11 02:57:25 [0ms]	53081	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:87	show databases
+2024-10-11 02:57:25 [0ms]	53081	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:88	select * from l where a=10 for update
+2024-10-11 03:07:08 [0ms]	53407	brand_new_threa	0	[ERROR]	[wzllogger]	tests/test_log.cpp:84	wangzhilei->err msg
+2024-10-11 03:07:08 [0ms]	53407	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:85	wangzhilei->info msg wangzhilei
+2024-10-11 03:07:08 [0ms]	53407	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:86	show tables
+2024-10-11 03:07:08 [0ms]	53407	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:87	show databases
+2024-10-11 03:07:08 [0ms]	53407	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:88	select * from l where a=10 for update
+2024-10-11 03:07:08 [0ms]	53407	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:89	You are beautiful, gay, giving, gentle, idiotically and deliciously feminine
+2024-10-11 03:07:08 [0ms]	53407	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:90	sexy,wonderfully intelligent,and wonderfully silly as well.
+2024-10-11 03:07:08 [0ms]	53407	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:91	I want nothing else in this life than to be with you, to listen and watch you,
+2024-10-11 03:07:08 [0ms]	53407	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:92	your beautiful voice, your beauty,to argue with you, to laugh with you
+2024-10-12 09:49:18 [0ms]	7238	brand_new_threa	0	[ERROR]	[wzllogger]	tests/test_log.cpp:84	wangzhilei->err msg
+2024-10-12 09:49:18 [1ms]	7238	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:85	wangzhilei->info msg wangzhilei
+2024-10-12 09:49:18 [1ms]	7238	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:86	show tables
+2024-10-12 09:49:18 [1ms]	7238	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:87	show databases
+2024-10-12 09:49:18 [1ms]	7238	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:88	select * from l where a=10 for update
+2024-10-12 09:49:18 [1ms]	7238	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:89	You are beautiful, gay, giving, gentle, idiotically and deliciously feminine
+2024-10-12 09:49:18 [1ms]	7238	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:90	sexy,wonderfully intelligent,and wonderfully silly as well.
+2024-10-12 09:49:18 [1ms]	7238	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:91	I want nothing else in this life than to be with you, to listen and watch you,
+2024-10-12 09:49:18 [1ms]	7238	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:92	your beautiful voice, your beauty,to argue with you, to laugh with you
+2024-10-12 12:55:30 [0ms]	9972	brand_new_threa	0	[ERROR]	[wzllogger]	tests/test_log.cpp:85	wangzhilei->err msg
+2024-10-12 12:55:30 [0ms]	9972	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:86	wangzhilei->info msg wangzhilei
+2024-10-12 12:55:30 [0ms]	9972	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:87	show tables
+2024-10-12 12:55:30 [0ms]	9972	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:88	show databases
+2024-10-12 12:55:30 [0ms]	9972	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:89	select * from l where a=10 for update
+2024-10-12 12:55:30 [0ms]	9972	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:90	You are beautiful, gay, giving, gentle, idiotically and deliciously feminine
+2024-10-12 12:55:30 [0ms]	9972	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:91	sexy,wonderfully intelligent,and wonderfully silly as well.
+2024-10-12 12:55:30 [0ms]	9972	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:92	I want nothing else in this life than to be with you, to listen and watch you,
+2024-10-12 12:55:30 [0ms]	9972	brand_new_threa	0	[INFO]	[wzllogger]	tests/test_log.cpp:93	your beautiful voice, your beauty,to argue with you, to laugh with you

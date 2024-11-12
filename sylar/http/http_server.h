@@ -18,9 +18,10 @@ namespace sylar {
 namespace http {
 
 /**
- * @brief HTTP服务器类
+ * @brief HTTP服务器类 继承TcpServer
  */
-class HttpServer : public TcpServer {
+class HttpServer : public TcpServer 
+{
 public:
     /// 智能指针类型
     typedef std::shared_ptr<HttpServer> ptr;
@@ -47,8 +48,10 @@ public:
     void setServletDispatch(ServletDispatch::ptr v) { m_dispatch = v;}
 
     virtual void setName(const std::string& v) override;
+
 protected:
     virtual void handleClient(Socket::ptr client) override;
+
 private:
     /// 是否支持长连接
     bool m_isKeepalive;

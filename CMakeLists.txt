@@ -1,11 +1,14 @@
+# 要求Cmake的最低版本
 cmake_minimum_required(VERSION 3.0)
+# 项目名称
 project(sylar-from-scratch)
 
 include (cmake/utils.cmake)
 
+# 显示详细的生成日志，默认是OFF
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-# 指定编译选项
+# 指定编译选项 $ENV{}用于获取环境变量设置环境变量的方法 CXXFLAGS c++编译器的选项，无默认值
 set(CMAKE_CXX_FLAGS "$ENV{CXXFLAGS} -std=c++11 -O0 -ggdb -Wall -Werror")
 
 # -rdynamic: 将所有符号都加入到符号表中，便于使用dlopen或者backtrace追踪到符号
@@ -18,12 +21,16 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -rdynamic -fPIC")
 # -Wno-deprecated-declarations: 不要警告使用带deprecated属性的变量，类型，函数
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-function -Wno-builtin-macro-redefined -Wno-deprecated -Wno-deprecated-declarations")
 
+# 将指定目录添加到编译器的头文件搜索路径之下，指定的目录被解释成当前源码路径的相对路径
+# 该命令就是在所有的源码.cpp文件在查找头文件的时候都会到当前目录去寻找
 include_directories(.)
 
+# 定义一个BUILD_TEST变量，描述信息，开启该变量
 option(BUILD_TEST "ON for complile test" ON)
 
+# 查找boost库 使用REQUIRED选项后，如果包没有被找到，就会产生一个错误信息，中断处理
 find_package(Boost REQUIRED) 
-if(Boost_FOUND)
+if(Boost_FOUND) # 包名boost+_FOUND 用于判断是否查找成功 Boost_INCLUDE_DIRS是boost库的头文件的路径
     include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
@@ -90,7 +97,10 @@ sylar_add_executable(test_http_server "tests/test_http_server.cc" sylar "${LIBS}
 sylar_add_executable(test_uri "tests/test_uri.cc" sylar "${LIBS}")
 sylar_add_executable(test_http_connection "tests/test_http_connection.cc" sylar "${LIBS}")
 sylar_add_executable(test_daemon "tests/test_daemon.cc" sylar "${LIBS}")
+sylar_add_executable(test_myhttpserver "tests/test_myhttpserver.cc" sylar "${LIBS}")
 endif()
 
+# 指定可执行程序的生成路径 PROJECT_SOURCE_DIR这个宏就是cmake 命令后面的路径 也就是CMakeLists.txt所在的路径
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+# 指定库的生成路径
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)

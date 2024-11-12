@@ -36,35 +36,44 @@ const char test_response_data[] = "HTTP/1.1 301 Moved Permanently\r\n"
                                   "<A HREF=\"http://www.google.com/\">here</A>.\r\n"
                                   "</BODY></HTML>\r\n";
 
-void test_request(const char *str) {
+void test_request(const char *str) 
+{
     sylar::http::HttpRequestParser parser;
     std::string tmp = str;
     std::cout << "<test_request>:" << std::endl
               << tmp << std::endl;
     parser.execute(&tmp[0], tmp.size());
-    if (parser.hasError()) {
+    if (parser.hasError()) 
+    {
         std::cout << "parser execute fail" << std::endl;
-    } else {
+    } 
+    else 
+    {
         sylar::http::HttpRequest::ptr req = parser.getData();
         std::cout << req->toString() << std::endl;
     }
 }
 
-void test_response(const char *str) {
+void test_response(const char *str) 
+{
     sylar::http::HttpResponseParser parser;
     std::string tmp = str;
     std::cout << "<test_response>:" << std::endl
               << tmp << std::endl;
     parser.execute(&tmp[0], tmp.size());
-    if (parser.hasError()) {
+    if (parser.hasError()) 
+    {
         std::cout << "parser execue fail" << std::endl;
-    } else {
+    } 
+    else 
+    {
         sylar::http::HttpResponse::ptr rsp = parser.getData();
         std::cout << rsp->toString() << std::endl;
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
     sylar::EnvMgr::GetInstance()->init(argc, argv);
     sylar::Config::LoadFromConfDir(sylar::EnvMgr::GetInstance()->getConfigPath());
 

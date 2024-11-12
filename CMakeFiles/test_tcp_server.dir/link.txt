@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++11 -O0 -ggdb -Wall -Werror -rdynamic -fPIC -Wno-unused-function -Wno-builtin-macro-redefined -Wno-deprecated -Wno-deprecated-declarations -rdynamic CMakeFiles/test_tcp_server.dir/tests/test_tcp_server.cc.o -o bin/test_tcp_server  -Wl,-rpath,/Coroutines/sylar-from-scratch/lib lib/libsylar.so -lpthread -ldl -lyaml-cpp 

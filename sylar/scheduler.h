@@ -47,13 +47,19 @@ public:
     const std::string &getName() const { return m_name; }
 
     /**
-     * @brief 获取当前线程调度器指针
+     * @brief 返回当前任务队列中的任务数量
+     */
+    unsigned int getTaskCount() { return m_tasks.size(); }
+
+    /**
+     * @brief 获取当前协程调度器指针
      */
     static Scheduler *GetThis();
 
     /**
      * @brief 获取当前线程的主协程
      */
+     
     static Fiber *GetMainFiber();
 
     /**
@@ -63,14 +69,16 @@ public:
      * @param[] thread 指定运行该任务的线程号，-1表示任意线程
      */
     template <class FiberOrCb>
-    void schedule(FiberOrCb fc, int thread = -1) {
+    void schedule(FiberOrCb fc, int thread = -1) 
+    {
         bool need_tickle = false;
         {
             MutexType::Lock lock(m_mutex);
             need_tickle = scheduleNoLock(fc, thread);
         }
 
-        if (need_tickle) {
+        if (need_tickle) 
+        {
             tickle(); // 唤醒idle协程
         }
     }
@@ -125,10 +133,13 @@ private:
      * @param[] thread 指定运行该任务的线程号，-1表示任意线程
      */
     template <class FiberOrCb>
-    bool scheduleNoLock(FiberOrCb fc, int thread) {
+    bool scheduleNoLock(FiberOrCb fc, int thread) 
+    {
         bool need_tickle = m_tasks.empty();
+        //初始化调度任务task
         ScheduleTask task(fc, thread);
-        if (task.fiber || task.cb) {
+        if (task.fiber || task.cb) 
+        {
             m_tasks.push_back(task);
         }
         return need_tickle;
@@ -138,26 +149,35 @@ private:
     /**
      * @brief 调度任务，协程/函数二选一，可指定在哪个线程上调度
      */
-    struct ScheduleTask {
+    struct ScheduleTask 
+    {
         Fiber::ptr fiber;
         std::function<void()> cb;
         int thread;
 
-        ScheduleTask(Fiber::ptr f, int thr) {
+        //下面都是各种构造函数 用于初始化调度任务
+        ScheduleTask(Fiber::ptr f, int thr) 
+        {
             fiber  = f;
             thread = thr;
         }
-        ScheduleTask(Fiber::ptr *f, int thr) {
+
+        ScheduleTask(Fiber::ptr *f, int thr) 
+        {
             fiber.swap(*f);
             thread = thr;
         }
-        ScheduleTask(std::function<void()> f, int thr) {
+
+        ScheduleTask(std::function<void()> f, int thr) 
+        {
             cb     = f;
             thread = thr;
         }
+
         ScheduleTask() { thread = -1; }
 
-        void reset() {
+        void reset() 
+        {
             fiber  = nullptr;
             cb     = nullptr;
             thread = -1;
@@ -177,12 +197,12 @@ private:
     std::vector<int> m_threadIds;
     /// 工作线程数量，不包含use_caller的主线程
     size_t m_threadCount = 0;
-    /// 活跃线程数
+    /// 活跃线程数（工作的线程数）
     std::atomic<size_t> m_activeThreadCount = {0};
-    /// idle线程数
+    /// idle线程数 空闲线程数
     std::atomic<size_t> m_idleThreadCount = {0};
 
-    /// 是否use caller
+    /// 是否use caller（是否让工作线程运行在创建调度器的线程上）
     bool m_useCaller;
     /// use_caller为true时，调度器所在线程的调度协程
     Fiber::ptr m_rootFiber;

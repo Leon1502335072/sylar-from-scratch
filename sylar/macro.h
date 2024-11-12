@@ -15,16 +15,21 @@
 #include "util.h"
 
 #if defined __GNUC__ || defined __llvm__
-/// LIKCLY 宏的封装, 告诉编译器优化,条件大概率成立
+/// LIKCLY 宏的封装, 告诉编译器优化,条件大概率成立 即SYLAR_LIKELY(x)大概率为真
 #define SYLAR_LIKELY(x) __builtin_expect(!!(x), 1)
-/// LIKCLY 宏的封装, 告诉编译器优化,条件大概率不成立
+/// LIKCLY 宏的封装, 告诉编译器优化,条件大概率不成立 即SYLAR_UNLIKELY(x)大概率为假
 #define SYLAR_UNLIKELY(x) __builtin_expect(!!(x), 0)
 #else
 #define SYLAR_LIKELY(x) (x)
 #define SYLAR_UNLIKELY(x) (x)
 #endif
 
-/// 断言宏封装
+/*
+    if(likely(value))  // 等价于 if(value) 只不过value可能为真的可能性更大。
+    if(unlikely(value))  // 也等价于 if(value) 只不过value可能为假的可能性更大
+*/
+
+/// 断言宏封装 SYLAR_ASSERT(x) 当x为真时不会断言（中断）
 #define SYLAR_ASSERT(x)                                                                \
     if (SYLAR_UNLIKELY(!(x))) {                                                        \
         SYLAR_LOG_ERROR(SYLAR_LOG_ROOT()) << "ASSERTION: " #x                          \

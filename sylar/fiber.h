@@ -19,8 +19,10 @@ namespace sylar {
 /**
  * @brief 协程类
  */
+//shared_from_this可以获取当前类的智能指针 继承enable_shared_from_this的类就不能在栈上创建对象
 class Fiber : public std::enable_shared_from_this<Fiber> {
 public:
+    //重命名的协程类的智能指针
     typedef std::shared_ptr<Fiber> ptr;
 
     /**
@@ -79,7 +81,7 @@ public:
     void yield();
 
     /**
-     * @brief 获取协程ID
+     * @brief 获取协程ID 这个函数只是单纯的获取id 不管这个协程是否在运行 只要创建出来就可以获取其id
      */
     uint64_t getId() const { return m_id; }
 
@@ -114,23 +116,29 @@ public:
     static void MainFunc();
 
     /**
-     * @brief 获取当前协程id
+     * @brief 获取当前正在运行的协程的id
      */
     static uint64_t GetFiberId();
 
 private:
     /// 协程id
     uint64_t m_id        = 0;
+
     /// 协程栈大小
     uint32_t m_stacksize = 0;
+
     /// 协程状态
     State m_state        = READY;
+
     /// 协程上下文
     ucontext_t m_ctx;
+
     /// 协程栈地址
     void *m_stack = nullptr;
+
     /// 协程入口函数
     std::function<void()> m_cb;
+
     /// 本协程是否参与调度器调度
     bool m_runInScheduler;
 };

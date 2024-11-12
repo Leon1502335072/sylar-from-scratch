@@ -29,7 +29,8 @@ public:
     /**
      * @brief Socket类型
      */
-    enum Type {
+    enum Type 
+    {
         /// TCP类型
         TCP = SOCK_STREAM,
         /// UDP类型
@@ -39,7 +40,8 @@ public:
     /**
      * @brief Socket协议簇
      */
-    enum Family {
+    enum Family 
+    {
         /// IPv4 socket
         IPv4 = AF_INET,
         /// IPv6 socket
@@ -91,10 +93,10 @@ public:
     static Socket::ptr CreateUnixUDPSocket();
 
     /**
-     * @brief Socket构造函数
+     * @brief Socket构造函数，构造之初m_sock=-1，在调bind（服务端）或是connect（客户端）这两个方法时再主动调newSock方法创建socket返回fd
      * @param[in] family 协议簇
      * @param[in] type 类型
-     * @param[in] protocol 协议
+     * @param[in] protocol 协议（默认为0，因为通过前两个参数就能确定协议）
      */
     Socket(int family, int type, int protocol = 0);
 
@@ -132,7 +134,8 @@ public:
      * @brief 获取sockopt模板 @see getsockopt
      */
     template <class T>
-    bool getOption(int level, int option, T &result) {
+    bool getOption(int level, int option, T &result) 
+    {
         socklen_t length = sizeof(T);
         return getOption(level, option, &result, &length);
     }
@@ -146,7 +149,8 @@ public:
      * @brief 设置sockopt模板 @see setsockopt
      */
     template <class T>
-    bool setOption(int level, int option, const T &value) {
+    bool setOption(int level, int option, const T &value) 
+    {
         return setOption(level, option, &value, sizeof(T));
     }
 

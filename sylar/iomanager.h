@@ -22,7 +22,8 @@ public:
      * @brief IO事件，继承自epoll对事件的定义
      * @details 这里只关心socket fd的读和写事件，其他epoll事件会归类到这两类事件中
      */
-    enum Event {
+    enum Event 
+    {
         /// 无事件
         NONE = 0x0,
         /// 读事件(EPOLLIN)
@@ -33,18 +34,20 @@ public:
 
 private:
     /**
-     * @brief socket fd上下文类
+     * @brief socket fd上下文结构体
      * @details 每个socket fd都对应一个FdContext，包括fd的值，fd上的事件，以及fd的读写事件上下文
      */
-    struct FdContext {
+    struct FdContext 
+    {
         typedef Mutex MutexType;
         /**
-         * @brief 事件上下文类
+         * @brief 事件上下文结构体
          * @details fd的每个事件都有一个事件上下文，保存这个事件的回调函数以及执行回调函数的调度器
          *          sylar对fd事件做了简化，只预留了读事件和写事件，所有的事件都被归类到这两类事件中
          */
-        struct EventContext {
-            /// 执行事件回调的调度器
+        struct EventContext 
+        {
+            /// 执行回调事件的调度器（处理该事件的调度器）
             Scheduler *scheduler = nullptr;
             /// 事件回调协程
             Fiber::ptr fiber;
@@ -76,9 +79,9 @@ private:
         EventContext read;
         /// 写事件上下文
         EventContext write;
-        /// 事件关联的句柄
+        /// 事件关联的句柄（文件描述符fd）
         int fd = 0;
-        /// 该fd添加了哪些事件的回调函数，或者说该fd关心哪些事件
+        /// fd的event 
         Event events = NONE;
         /// 事件的Mutex
         MutexType mutex;
@@ -99,7 +102,7 @@ public:
     ~IOManager();
 
     /**
-     * @brief 添加事件
+     * @brief 向指定的fd上添加事件
      * @details fd描述符发生了event事件时执行cb函数
      * @param[in] fd socket句柄
      * @param[in] event 事件类型
@@ -109,7 +112,7 @@ public:
     int addEvent(int fd, Event event, std::function<void()> cb = nullptr);
 
     /**
-     * @brief 删除事件
+     * @brief 删除fd上的指定事件
      * @param[in] fd socket句柄
      * @param[in] event 事件类型
      * @attention 不会触发事件
@@ -127,7 +130,7 @@ public:
     bool cancelEvent(int fd, Event event);
 
     /**
-     * @brief 取消所有事件
+     * @brief 把传进来的fd上的事件全部取消
      * @details 所有被注册的回调事件在cancel之前都会被执行一次
      * @param[in] fd socket句柄
      * @return 是否删除成功
@@ -149,6 +152,7 @@ protected:
     /**
      * @brief 判断是否可以停止
      * @details 判断条件是Scheduler::stopping()外加IOManager的m_pendingEventCount为0，表示没有IO事件可调度了
+     *          如果当前没有空闲调度线程，那就没必要发通知
      */
     bool stopping() override;
 
@@ -181,11 +185,12 @@ private:
     int m_epfd = 0;
     /// pipe 文件句柄，fd[0]读端，fd[1]写端
     int m_tickleFds[2];
+    
     /// 当前等待执行的IO事件数量
     std::atomic<size_t> m_pendingEventCount = {0};
     /// IOManager的Mutex
     RWMutexType m_mutex;
-    /// socket事件上下文的容器
+    /// fd事件上下文集合
     std::vector<FdContext *> m_fdContexts;
 };
 

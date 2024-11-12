@@ -71,7 +71,7 @@ public:
     bool getSysNonblock() const { return m_sysNonblock;}
 
     /**
-     * @brief 设置超时时间
+     * @brief 设置文件句柄fd的超时时间
      * @param[in] type 类型SO_RCVTIMEO(读超时), SO_SNDTIMEO(写超时)
      * @param[in] v 时间毫秒
      */

@@ -8,18 +8,22 @@
 
 sylar::Logger::ptr g_logger = SYLAR_LOG_ROOT();
 
-void test2() {
+void test2() 
+{
     std::cout << sylar::BacktraceToString() << std::endl;
 }
-void test1() {
+void test1() 
+{
     test2();
 }
 
-void test_backtrace() {
+void test_backtrace() 
+{
     test1();
 }
 
-int main() {
+int main() 
+{
     SYLAR_LOG_INFO(g_logger) << sylar::GetCurrentMS();
     SYLAR_LOG_INFO(g_logger) << sylar::GetCurrentUS();
     SYLAR_LOG_INFO(g_logger) << sylar::ToUpper("hello");
@@ -29,7 +33,8 @@ int main() {
 
     std::vector<std::string> files;
     sylar::FSUtil::ListAllFile(files, "./sylar", ".cpp");
-    for (auto &i : files) {
+    for (auto &i : files) 
+    {
         SYLAR_LOG_INFO(g_logger) << i;
     }
 
